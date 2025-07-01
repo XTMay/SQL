@@ -66,4 +66,4 @@ Level up with:
 
 1. Fork or clone this repo:
    ```bash
-   git clone https://github.com/your-username/sql-plsql-course.git
+   git clone [https://github.com/your-username/sql-plsql-course.git](https://github.com/XTMay/SQL.git)
