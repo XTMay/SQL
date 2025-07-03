@@ -1,0 +1,58 @@
+SELECT * FROM students;
+SELECT * FROM departments;
+
+-- 学生年龄 > 21 和 部门ID = 3 的学生信息 （AND）
+SELECT *
+FROM students
+WHERE age > 21 AND department_id = 3;
+
+-- 学生年龄 > 21 或者 是女生的所有学生信息 （OR）
+SELECT *
+FROM students
+WHERE age > 21 OR gender = 'Female';
+
+-- 姓名 Bob （单一条件）
+SELECT *
+FROM students
+WHERE name = 'Bob';
+
+
+--题目 4：查询来自 Computer Science 系部，且年龄不小于 21 岁的学生
+/*Step 1（找到相关的表）:  学生
+Step 2（找到相关的条件，分析条件之间的关系）: Department_name = Computer AND Science age > 21
+Step 3 （最终要查询的信息（列名），没有指定，返回所有信息 *）: *， column name*/
+SELECT *
+FROM students
+WHERE department_id = 1 AND age > 21;
+
+
+-- 查询学生姓名里面有字母“a”的姓名和年龄
+SELECT age, name
+FROM students
+WHERE name LIKE '%a%'; --通配符 % 代表任意大小字符0, any
+
+-- 不同的条件方法可以实现不同的查询结果，但是性能（performance）却不一样
+SELECT age, name
+FROM students
+WHERE student_id IN (1003, 1004);
+
+SELECT age, name
+FROM students
+WHERE student_id = 1003 OR student_id = 1004;
+
+-- Create a table （创建一张表）
+
+INSERT INTO students (
+                         student_id,
+                         name,
+                         gender,
+                         age,
+                         department_id
+                     )
+                     VALUES (
+                         '1005',
+                         'Alice',
+                         'Female',
+                         '18',
+                         '2'
+                     );
