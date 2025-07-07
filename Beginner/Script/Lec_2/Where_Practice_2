@@ -1,0 +1,186 @@
+SELECT * FROM courses;
+/*INSERT INTO courses (course_name, credit, schedule_time, teacher_id, department_id, is_mandatory) VALUES
+('Python编程基础', 3.0, '10:00', 1, 1, 1),*/
+SELECT * FROM departments;
+/*INSERT INTO departments (department_name, description) VALUES
+('计算机系', '主要课程包括编程、AI、数据库等'),*/
+SELECT * FROM enrollments;
+/*INSERT INTO enrollments (student_id, course_id, score, is_passed) VALUES
+(1, 1, 85.5, 1)*/
+SELECT * FROM students;
+/*INSERT INTO students (name, age, gender, birth_date, enrolled_date, gpa, department_id) VALUES
+('小明', 20, '男', '2003-04-12', '2021-09-01', 3.5, 1),*/
+SELECT * FROM teachers;
+/*INSERT INTO teachers (name, hire_date, salary, title) VALUES
+('张三', '2015-09-01', 8500.00, '副教授'),*/
+
+
+-- NOT 条件
+-- 查询所有年龄不大于22岁的学生
+SELECT *
+FROM students
+WHERE NOT (age > 22);
+
+-- 查询所有GPA不大于3.3的学生
+SELECT *
+FROM students
+WHERE NOT gpa > 3.3;
+
+
+-- BETWEEN x AND y	
+-- e.g.: score BETWEEN 80 AND 90
+-- 查询薪资在 8000 到 10000 之间的教师姓名和薪资
+SELECT name, salary
+FROM teachers
+WHERE salary BETWEEN 8000 AND 10000;
+
+-- 查找 GPA 在 3.0 到 4.0 之间的学生
+SELECT *
+FROM students
+WHERE gpa BETWEEN 3.0 AND 4.0;
+
+-- 查询入学日期在 2020 年到 2022 年之间的学生
+SELECT ?
+FROM ?
+WHERE ?;
+
+
+-- NOT (BETWEEN x AND y	age)
+-- e.g.: NOT BETWEEN 10 AND 18
+-- 查找成绩不在 60 到 80 分之间的选课记录
+SELECT ?
+FROM ?
+WHERE ?;
+
+
+-- 找出出生日期不在 2000 到 2003 年之间的学生
+SELECT ?
+FROM ?
+WHERE ?;
+
+-- IN (v1, v2, v3)
+-- IN (x, y, z, a, v, b, c, d) 等价于 = x OR = y OR = z	
+-- e.g.: department_id IN (1, 2, 3)
+-- 查询属于“计算机系 (1)”和“数学系 (3)”的学生
+SELECT *
+FROM students
+WHERE department_id IN (1, 3);
+
+-- 查找特定教师教授的课程（teacher_id 为 1、3、5）
+SELECT ?
+FROM ?
+WHERE ?;
+
+-- NOT IN (v1, v2, v3)	 
+-- NOT IN (x, y, z) 等价于 != x AND != y AND != z
+-- e.g.: gender NOT IN ('Male', 'Other')
+-- 查询不在“外语系 (2)”和“心理学系 (5)”的课程
+SELECT ?
+FROM ?
+WHERE ?;
+
+
+-- IS NULL	
+--  e.g.: score IS NULL
+-- 查询 GPA 缺失的学生
+SELECT ?
+FROM ?
+WHERE ?;
+
+-- 查询未安排时间的课程
+SELECT ?
+FROM ?
+WHERE ?;
+
+-- 查询成绩未录入的选课记录
+SELECT ?
+FROM ?
+WHERE ?;
+
+-- IS NOT NULL	
+-- e.g.: name IS NOT NULL
+-- 查询所有工资不为 NULL 的教师
+SELECT ?
+FROM ?
+WHERE ?;
+
+-- 查询 有GPA 的学生
+SELECT ?
+FROM ?
+WHERE ?;
+
+
+
+-- 查询生日不为NULL且年龄在21岁到23岁之间的所有女生的姓名，年龄和生日
+
+
+-- 查询来自部门1的GPA不小于3.2的或GPA为NULL的学生信息
+
+
+-- 🔢 数学函数
+-- ROUND(x) 	
+-- e.g.: ROUND(88.678) → 89 	 四舍五入
+SELECT gpa, ROUND(gpa)
+FROM students;
+
+-- ABS(x) 	 
+-- e.g.: ABS(-10) → 10 	 绝对值
+
+-- CEIL(x) / FLOOR(x)
+-- e.g.: CEIL(3.4) → 4 / FLOOR(3.4) → 3 	 向上 / 向下取整
+
+SELECT gpa, CEIL(gpa), FLOOR(gpa)
+FROM students;
+
+-- POWER(x, y) 	 
+-- e.g.: POWER(2, 3) → 8 	 x 的 y 次幂
+SELECT POWER(2, 3)
+FROM students;
+
+-- SQRT(x) 	 
+-- e.g.: SQRT(9) → 3 	 平方根
+
+SELECT SQRT(9)
+FROM students;
+
+-- RANDOM() 	 
+-- e.g.: RANDOM() → 随机整数 	 生成随机值
+
+SELECT RANDOM()
+FROM students;
+
+-- 🔠 字符串函数 	 
+
+-- LENGTH(s) 	 
+-- e.g.: LENGTH('SQL') → 3 	 字符串长度
+
+SELECT LENGTH('SQL')
+FROM students;
+
+-- UPPER(s) / LOWER(s) 	 
+-- e.g.: UPPER('sql') → 'SQL' 	 转换为大写 / 小写
+SELECT UPPER('sql')
+FROM students;
+
+-- SUBSTR(s, start, len) 	 
+-- e.g.: SUBSTR('SQL语言', 1, 3) → 'SQL' 	 截取子串
+SELECT SUBSTR('SQL语言', 1, 3)
+FROM students;
+
+-- TRIM(s) / LTRIM() / RTRIM() 	 
+-- e.g.: TRIM(' abc ') → 'abc' 	 去除空格/前导/尾部字符
+SELECT TRIM(' abc ')
+FROM students;
+
+-- REPLACE(s, old, new) 	 
+-- e.g.: REPLACE('apple', 'a', 'A') → 'Apple' 	 替换子串
+SELECT REPLACE('apple', 'a', 'A')
+FROM students;
+
+-- INSTR(s, substr) 	 
+-- e.g.: INSTR('hello', 'e') → 2 	 查找子串位置*/
+SELECT INSTR('hello', 'e')
+FROM students;
+
+
+
