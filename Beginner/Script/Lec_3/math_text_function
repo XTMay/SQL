@@ -1,0 +1,104 @@
+SELECT * FROM courses;
+/*INSERT INTO courses (course_name, credit, schedule_time, teacher_id, department_id, is_mandatory) VALUES
+('Python编程基础', 3.0, '10:00', 1, 1, 1),*/
+SELECT * FROM departments;
+/*INSERT INTO departments (department_name, description) VALUES
+('计算机系', '主要课程包括编程、AI、数据库等'),*/
+SELECT * FROM enrollments;
+/*INSERT INTO enrollments (student_id, course_id, score, is_passed) VALUES
+(1, 1, 85.5, 1)*/
+SELECT * FROM students;
+/*INSERT INTO students (name, age, gender, birth_date, enrolled_date, gpa, department_id) VALUES
+('小明', 20, '男', '2003-04-12', '2021-09-01', 3.5, 1),*/
+SELECT * FROM teachers;
+/*INSERT INTO teachers (name, hire_date, salary, title) VALUES
+('张三', '2015-09-01', 8500.00, '副教授'),*/
+
+
+-- NOT 条件
+-- 查询所有年龄不大于22岁的学生
+SELECT *
+FROM students
+WHERE NOT (age > 22);
+
+
+-- BETWEEN x AND y	
+-- e.g.: score BETWEEN 80 AND 90
+-- 查询薪资在 8000 到 10000 之间的教师姓名和薪资
+SELECT name, salary
+FROM teachers
+WHERE (salary BETWEEN 8000 AND 10000);
+
+
+-- NOT IN (v1, v2, v3)	 
+-- NOT IN (x, y, z) 等价于 != x AND != y AND != z
+-- e.g.: gender NOT IN ('Male', 'Other')
+-- 查询不在“外语系 (2)”和“心理学系 (5)”的课程
+
+-- 🔢 数学函数
+-- ROUND(x) 	
+-- e.g.: ROUND(88.678) → 89 	 四舍五入
+SELECT gpa, ROUND(gpa)
+FROM students;
+
+-- ABS(x) 	 
+-- e.g.: ABS(-10) → 10 	 绝对值
+SELECT ABS(-1.2)
+FROM students;
+
+-- CEIL(x) / FLOOR(x)
+-- e.g.: CEIL(3.4) → 4 / FLOOR(3.4) → 3 	 向上 / 向下取整
+SELECT 'abc', CEIL(3.00001), FLOOR(3.00001)
+FROM teachers;
+
+-- POWER(x, y) 	 
+-- e.g.: POWER(2, 3) → 8 	 x 的 y 次幂
+SELECT POWER(3, 2)
+FROM students;
+
+-- SQRT(x) 	 
+-- e.g.: SQRT(9) → 3 	 平方根
+SELECT SQRT(16)
+FROM students;
+
+-- RANDOM() 	 
+-- e.g.: RANDOM() → 随机整数 	 生成随机值
+SELECT RANDOM()
+FROM students;
+
+-- 🔠 字符串函数 	 
+
+-- LENGTH(s) 	 
+-- e.g.: LENGTH('SQL') → 3 	 字符串长度
+
+SELECT LENGTH('文bbもじaaおう')
+FROM students;
+
+-- UPPER(s) / LOWER(s) 	 
+-- e.g.: UPPER('sql') → 'SQL' 	 转换为大写 / 小写
+SELECT LOWER('SqlA') -- sqla
+FROM students;
+
+-- SUBSTR(s, start, len) -- s: target text	start: strat index, len: substring length
+-- e.g.: SUBSTR('SQL语言', 1, 3) → 'SQL' 	 截取子串
+SELECT SUBSTR('SQL语言SQL语言', 4, 2)
+FROM students;
+
+-- TRIM(s) / LTRIM() / RTRIM() 	 
+-- e.g.: TRIM(' abc ') → 'abc' 	 去除空格/前导/尾部字符
+SELECT RTRIM(' abc ')
+FROM students;
+
+
+-- REPLACE(s, old, new) 	 
+-- e.g.: REPLACE('apple', 'a', 'A') → 'Apple' 	 替换子串
+SELECT REPLACE('apple', 'p', 'P')
+FROM students;
+
+-- IN(INdex)STR(string)(s, substr) 	 
+-- e.g.: INSTR('hello', 'e') → 2 	 查找子串位置*/
+SELECT INSTR('查找子hello串位置', '子')
+FROM students;
+
+
+

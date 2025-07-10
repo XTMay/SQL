@@ -1,0 +1,78 @@
+-- 查询所有年龄为 20 岁的学生姓名与年龄。	
+SELECT name, age FROM students WHERE age = 20;
+-- 查询薪资高于 9000 的教师姓名和职称。	
+SELECT name, title FROM teachers WHERE salary > 9000;
+-- 查询 GPA 高于 3.5 且性别为女的学生姓名与 GPA。	
+SELECT name, gpa FROM students WHERE gpa > 3.5 AND gender = '女';
+-- 查询入职时间早于 2017 年或薪资低于 7000 的教师信息。	
+SELECT * FROM teachers WHERE hire_date < '2017-01-01' OR salary < 7000;
+	
+-- 查询年龄在 21 到 23 岁之间的学生。	
+SELECT * FROM students WHERE age BETWEEN 21 AND 23;
+
+-- 查询薪资不在 8000 到 10000 之间的教师。	
+SELECT * FROM teachers WHERE salary NOT BETWEEN 8000 AND 10000;
+-- 查询性别为“男”或“女”的学生姓名与性别。	
+SELECT name, gender FROM students WHERE gender IN ('男', '女');
+-- 查询职称不是“教授”或“副教授”的教师姓名与职称。	
+SELECT name, title FROM teachers WHERE title NOT IN ('教授', '副教授');
+	
+-- 查询课程表中没有指定上课时间（schedule_time）的课程。	
+SELECT * FROM courses WHERE schedule_time IS NULL;
+
+-- 查询 GPA 不为空的所有学生信息。	
+SELECT * FROM students WHERE gpa IS NOT NULL;
+
+-- 查询没有通过课程的选课记录（is_passed = 0）。	
+SELECT * FROM enrollments WHERE NOT is_passed;
+
+-- 查询所有不是计算机系(department_id = 1)的学生。	
+SELECT * FROM students WHERE NOT department_id = 1;
+	
+-- 查询 GPA 在 3.0 到 3.8 之间，且就读于数学系或物理系的学生。	
+	SELECT * FROM students 
+	WHERE gpa BETWEEN 3.0 AND 3.8 AND department_id IN (3, 4);
+-- 查询年龄不在 20 到 22 岁之间，且性别为“女”的学生姓名与年龄。	
+	SELECT name, age FROM students 
+	WHERE age NOT BETWEEN 20 AND 22 AND gender = '女';
+-- 查询所有课程中，非必修（is_mandatory = 0）且所属系为外语系(department_id = 2 )或心理学系(department_id = 5)的课程。	
+	SELECT * FROM courses 
+	WHERE is_mandatory = 0 AND department_id IN (2, 5);
+	
+-- 查询 GPA 在 3.0 到 4.0 之间，性别为女，且就读于外语系或数学系的学生。	
+	SELECT * FROM students
+	WHERE gpa BETWEEN 3.0 AND 4.0
+	  AND gender = '女'
+	  AND department_id IN (2, 3);
+-- 查询薪资在 7000 到 10000 之间，职称不是“助教”，且入职时间早于 2019 年的教师。	
+	SELECT * FROM teachers
+	WHERE salary BETWEEN 7000 AND 10000
+	  AND title != '助教'
+	  AND hire_date < '2019-01-01';
+	
+-- 查询选课成绩高于 80，且已通过课程，同时课程编号不在 (1, 3, 5) 中的选课记录。	
+	SELECT * FROM enrollments
+	WHERE score > 80
+	  AND is_passed = 1
+	  AND course_id NOT IN (1, 3, 5);
+	
+-- 查询年龄在 20–23 岁之间，GPA 大于 3.5，性别为女，且所在系为外语系或心理学系的学生。	
+	SELECT * FROM students
+	WHERE age BETWEEN 20 AND 23
+	  AND gpa > 3.5
+	  AND gender = '女'
+	  AND department_id IN (2, 5);
+	
+-- 查询课程是必修课（is_mandatory = 1），课程时间不在 ‘10:00’ 到 ‘14:00’ 之间，教师编号不为 2，且所属系为计算机系或数学系的课程。	
+	SELECT * FROM courses
+	WHERE is_mandatory = 1
+	  AND schedule_time NOT BETWEEN '10:00' AND '14:00'
+	  AND teacher_id != 2
+	  AND department_id IN (1, 3);
+	
+-- 查询教师薪资不在 7000 到 10000 之间、职称不是教授、名字不为空（不为 NULL）、且入职时间在 2016 年之后的教师。	
+	SELECT * FROM teachers
+	WHERE salary NOT BETWEEN 7000 AND 10000
+	  AND title != '教授'
+	  AND name IS NOT NULL
+	  AND hire_date > '2016-01-01';
