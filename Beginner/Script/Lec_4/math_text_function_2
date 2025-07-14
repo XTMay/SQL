@@ -1,0 +1,98 @@
+SELECT *
+  FROM students;
+
+SELECT *
+  FROM courses;
+
+SELECT *
+  FROM teachers;-- 🧮 数值函数类
+-- 1. 显示所有学生的 GPA 以及四舍五入后的 GPA（保留 1 位小数）。-- ROUND(gpa, 1)
+SELECT st.name,
+       st.gpa,
+       cr.department_id
+  FROM students AS st
+       JOIN
+       courses AS cr ON st.department_id = cr.department_id;-- 2. 显示每位教师的薪资差值（以 7000 为基准）与绝对值。
+-- ABS(salary - 9000)
+SELECT name,
+       salary,
+       9000 - 7000 AS diff
+  FROM teachers;-- 3. 显示所有课程的学分，向上取整和向下取整。
+-- CEIL(credit)-- FLOOR(credit)
+SELECT gpa,
+       CEIL(gpa) AS ceil_gpa,
+       FLOOR(gpa) AS floor_gpa
+  FROM students;-- 4. 查询所有课程的学分的平方与平方根。
+-- POWER(credit, 2)-- SQRT(credit)
+SELECT gpa,
+       POWER(gpa, 2) 
+  FROM students;
+
+SELECT salary,
+       SQRT(salary) 
+  FROM teachers;-- ORDER BY 排序
+-- LIMIT 限制 返回 1？条数据-- 5. 随机返回任意一个学生的信息。
+SELECT *
+  FROM students
+ ORDER BY RANDOM() 
+ LIMIT 3;-- 🔤 字符串函数类
+-- 6. 显示所有教师姓名及其长度。-- LENGTH(name)
+SELECT course_name,
+       LENGTH(course_name) 
+  FROM courses
+ WHERE LENGTH(course_name) > 4;-- 7. 显示所有系别名称的大写与小写形式。
+-- UPPER(department_name)-- LOWER(department_name)
+SELECT course_name,
+       UPPER(course_name) AS upper_name,
+       LOWER(course_name) AS lower_name
+  FROM courses;-- 8. 显示课程名称的前两个字。
+-- SUBSTR(course_name, 1, 2)
+SELECT course_name,
+LENGTH(course_name),
+       LENGTH(course_name) - 1,
+       SUBSTR(course_name, , 2) 
+  FROM courses;
+  
+
+-- 9. 显示去除学生姓名两侧空格后的结果。
+-- TRIM(name), LTRIM(name), RTRIM(name)
+SELECT name, TRIM(name), LTRIM(name), RTRIM(name)
+FROM students;
+
+-- 10. 显示课程名称，将 “编程” 替换为 “程序”。
+-- REPLACE(course_name, '编程', '程序')
+-- em[ty -> "R"
+SELECT name, REPLACE(name, ' ', 'R')
+FROM students;
+
+SELECT course_name, REPLACE(course_name, '编程', '程序')
+FROM courses;
+   
+-- 11. 显示课程名称中“学”字首次出现的位置。
+-- INSTR(course_name, '学')
+SELECT course_name,INSTR(course_name, '导')
+FROM courses;
+
+
+-- ORDERBY, LIMIT
+-- birth_date, enrolled_date-- DATE('now')
+SELECT DATE('now') 
+  FROM students;
+
+SELECT *
+  FROM students;-- DATETIME('now')
+
+SELECT DATETIME('now') 
+  FROM students;-- STRFTIME('%Y', 'now')
+
+SELECT STRFTIME('%Y', 'now') 
+  FROM students;-- STRFTIME('%m', 'now')
+
+SELECT STRFTIME('%m', 'now') 
+  FROM students;-- STRFTIME('%d', 'now')
+
+SELECT STRFTIME('%d', 'now') 
+  FROM students;-- JULIANDAY('now')
+
+SELECT JULIANDAY('now') 
+  FROM students;
