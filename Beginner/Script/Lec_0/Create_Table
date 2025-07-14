@@ -1,69 +1,65 @@
--- 学生表
-CREATE TABLE students (
-    student_id INTEGER PRIMARY KEY,
-    name TEXT NOT NULL,
-    gender TEXT,
-    age INTEGER,
-    department_id INTEGER
-);
+-- Drop tables if they already exist
+DROP TABLE IF EXISTS enrollments;
+DROP TABLE IF EXISTS students;
+DROP TABLE IF EXISTS courses;
+DROP TABLE IF EXISTS teachers;
+DROP TABLE IF EXISTS departments;
 
--- 系部表
+-- 1. departments 系部表
 CREATE TABLE departments (
-    department_id INTEGER PRIMARY KEY,
-    department_name TEXT NOT NULL
+    department_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    department_name TEXT NOT NULL,
+    description TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    is_active INTEGER DEFAULT 1
 );
 
--- 课程表
+-- 2. teachers 教师表
+CREATE TABLE teachers (
+    teacher_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    hire_date DATE,
+    salary REAL,
+    title TEXT,
+    is_full_time INTEGER DEFAULT 1
+);
+
+-- 3. courses 课程表
 CREATE TABLE courses (
-    course_id INTEGER PRIMARY KEY,
+    course_id INTEGER PRIMARY KEY AUTOINCREMENT,
     course_name TEXT NOT NULL,
+    credit REAL,
+    schedule_time TIME,
     teacher_id INTEGER,
     department_id INTEGER,
-    credit INTEGER
+    is_mandatory INTEGER DEFAULT 0,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (teacher_id) REFERENCES teachers(teacher_id),
+    FOREIGN KEY (department_id) REFERENCES departments(department_id)
 );
 
--- 教师表
-CREATE TABLE teachers (
-    teacher_id INTEGER PRIMARY KEY,
+-- 4. students 学生表
+CREATE TABLE students (
+    student_id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
-    title TEXT
+    age INTEGER,
+    gender TEXT,
+    birth_date DATE,
+    enrolled_date DATE,
+    gpa REAL,
+    department_id INTEGER,
+    is_active INTEGER DEFAULT 1,
+    FOREIGN KEY (department_id) REFERENCES departments(department_id)
 );
 
--- 学生选课表（带分数）
+-- 5. enrollments 选课表
 CREATE TABLE enrollments (
-    enrollment_id INTEGER PRIMARY KEY,
+    enrollment_id INTEGER PRIMARY KEY AUTOINCREMENT,
     student_id INTEGER,
     course_id INTEGER,
-    score REAL
+    score REAL,
+    enrolled_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    is_passed INTEGER,
+    FOREIGN KEY (student_id) REFERENCES students(student_id),
+    FOREIGN KEY (course_id) REFERENCES courses(course_id)
 );
-
--- 系部
-INSERT INTO departments VALUES (1, 'Computer Science'), (2, 'Mathematics'), (3, 'Liberal Arts');
-
--- 学生
-INSERT INTO students VALUES 
-(1001, 'Alice', 'Female', 20, 1),
-(1002, 'Bob', 'Male', 22, 2),
-(1003, 'Cathy', 'Female', 21, 1),
-(1004, 'David', 'Male', 23, 3);
-
--- 教师
-INSERT INTO teachers VALUES
-(1, 'Dr. Zhang', 'Professor'),
-(2, 'Ms. Yamada', 'Lecturer'),
-(3, 'Mr. Lee', 'Senior Lecturer');
-
--- 课程
-INSERT INTO courses VALUES
-(201, 'SQL Basics', 1, 1, 3),
-(202, 'Calculus I', 2, 2, 4),
-(203, 'Creative Writing', 3, 3, 2);
-
--- 选课记录（带分数）
-INSERT INTO enrollments VALUES
-(1, 1001, 201, 85.0),
-(2, 1001, 202, 78.5),
-(3, 1002, 202, 88.0),
-(4, 1003, 201, 92.5),
-(5, 1003, 203, 75.0),
-(6, 1004, 203, 80.0);

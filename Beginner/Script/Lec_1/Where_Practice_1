@@ -1,6 +1,18 @@
 SELECT * FROM students;
 SELECT * FROM departments;
 
+-- 查询学生年龄 > 21的姓名和GPA信息
+SELECT name, gpa
+FROM students
+WHERE age > 21;
+
+-- 学生部门ID = 3 的学生信息
+SELECT *
+FROM students
+WHERE department_id = 3;
+
+
+
 -- 学生年龄 > 21 和 部门ID = 3 的学生信息 （AND）
 SELECT *
 FROM students
@@ -9,13 +21,12 @@ WHERE age > 21 AND department_id = 3;
 -- 学生年龄 > 21 或者 是女生的所有学生信息 （OR）
 SELECT *
 FROM students
-WHERE age > 21 OR gender = 'Female';
-
--- 姓名 Bob （单一条件）
+WHERE age > 21 OR gender = "女";
+-- 查询所有女生成绩（GPA）大于3.1或者男生的成绩小于3的所有信息
 SELECT *
 FROM students
-WHERE name = 'Bob';
-
+WHERE gender = "女" AND gpa > 3.1
+OR gender = "男" AND gpa < 3.0;
 
 --题目 4：查询来自 Computer Science 系部，且年龄不小于 21 岁的学生
 /*Step 1（找到相关的表）:  学生
@@ -23,18 +34,22 @@ Step 2（找到相关的条件，分析条件之间的关系）: Department_name
 Step 3 （最终要查询的信息（列名），没有指定，返回所有信息 *）: *， column name*/
 SELECT *
 FROM students
-WHERE department_id = 1 AND age > 21;
+WHERE ?;
 
 
--- 查询学生姓名里面有字母“a”的姓名和年龄
 SELECT age, name
 FROM students
-WHERE name LIKE '%a%'; --通配符 % 代表任意大小字符0, any
+WHERE name LIKE '.a%';
 
 -- 不同的条件方法可以实现不同的查询结果，但是性能（performance）却不一样
-SELECT age, name
+SELECT age, name, department_id
 FROM students
-WHERE student_id IN (1003, 1004);
+WHERE department_id IN (3, 4, 5);
+
+
+SELECT age, name, department_id
+FROM students
+WHERE department_id = 3 OR department_id = 4 OR department_id = 5;
 
 SELECT age, name
 FROM students
