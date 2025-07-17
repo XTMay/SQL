@@ -1,0 +1,268 @@
+SELECT *
+  FROM students;
+
+SELECT *
+  FROM courses;
+
+SELECT *
+  FROM teachers;
+
+-- birth_date, enrolled_date-- DATE('now')
+
+/*DATE('now')
+TIME('now')
+DATETIME('now')
+STRFTIME('%Y', 'now')
+STRFTIME('%m', 'now')
+STRFTIME('%d', 'now')
+STRFTIME('%H', 'now')
+STRFTIME('%M', 'now')
+STRFTIME('%S', 'now')
+STRFTIME('%w', 'now')
+STRFTIME('%j', 'now')
+STRFTIME('%W', 'now')*/
+
+/*DATE('now', '+1 day')
+DATE('now', '-7 day')
+DATETIME('now', '+3 hours', '-15 minutes')
+DATE('2025-01-01', '+1 month')
+DATE('2025-01-01', '+1 year', '-1 day')*/
+
+SELECT DATETIME('now') 
+  FROM students;-- STRFTIME('%Y', 'now')
+
+SELECT STRFTIME('%Y', 'now') 
+  FROM students;-- STRFTIME('%m', 'now')
+
+SELECT STRFTIME('%m', 'now') 
+  FROM students;-- STRFTIME('%d', 'now')
+
+SELECT STRFTIME('%d', 'now') 
+  FROM students;-- JULIANDAY('now')
+
+SELECT JULIANDAY('now') 
+  FROM students;
+
+-- 查询所有学生的姓名和出生年份（从 birth_date 提取年）
+-- STRFTIME('%Y', birth_date)
+SELECT name
+FROM students;
+
+-- 查询所有今天注册的学生（enrolled_at 是今天（DATE('now')））
+SELECT name, enrolled_at
+FROM students
+WHERE DATE(enrolled_date);
+
+--  查询最近 7 天内注册的学生
+-- DATE('now', '-7 days')
+SELECT name, enrolled_date
+FROM students
+WHERE DATE(enrolled_date);
+
+-- 查询所有课程持续天数（now - created_at）
+-- JULIANDAY(date)
+SELECT course_name, JULIANDAY('now') - JULIANDAY(created_at)
+FROM courses;
+
+-- 查询出生在 2000 年后的学生
+-- DATE('2000-01-01')
+SELECT name, birth_date
+FROM students
+WHERE birth_date;
+
+-- 查询学生的注册月份（格式：2025-07）
+-- STRFTIME('%Y-%m', enrolled_date)
+SELECT name
+FROM students;
+
+-- 查询注册时间是早上（上午 12 点到 11 点）的学生
+-- STRFTIME('%H', enrolled_at)
+SELECT name, STRFTIME('%H', enrolled_date) AS hour
+FROM students
+WHERE CAST(STRFTIME('%H', enrolled_date) AS INTEGER) BETWEEN 0 AND 11;
+
+-- 查询在周末（周六或周日）注册的学生
+SELECT name, enrolled_date, STRFTIME('%w', enrolled_date) AS weekday
+FROM students
+WHERE STRFTIME('%w', enrolled_date) IN ('0', '6');  -- 0 = Sunday, 6 = Saturday
+
+-- 查询出生日期在每年 6 月份的学生
+SELECT name, birth_date
+FROM students
+WHERE STRFTIME('%m', birth_date) = '06';
+
+--  查询所有学生注册距今天的天数
+SELECT name, enrolled_date, 
+       CAST(JULIANDAY('now') - JULIANDAY(enrolled_date) AS INTEGER) AS days_since_enroll
+FROM students;
+
+
+-- 查询每门课程的结束时间延后 7 天后的日期
+SELECT course_name, created_at, DATE(created_at, '+7 days') AS extended_end
+FROM courses;
+
+-- 查询课程起始后 1 个月、2 周的上课日期
+SELECT course_name, created_at,
+       DATE(created_at, '+1 month', '+14 days') AS next_class_date
+FROM courses;
+
+-- ORDERBY, LIMIT
+-- 查询所有学生信息，并按年龄升序排列，只显示前 5 位：
+
+SELECT name, age
+FROM students
+ORDER BY age ASC
+LIMIT 5;
+
+ -- 查询课程表中最近创建的记录 
+SELECT course_id, DATETIME(created_at) AS created_at 
+FROM courses
+ORDER BY created_at DESC 
+LIMIT 5;
+
+
+-- Practice for test
+-- 查询年龄在 18 到 22 岁之间的学生姓名和年龄
+
+SELECT 
+FROM students 
+WHERE ;
+
+-- 查询不在 18 到 22 岁之间的学生姓名和年龄
+
+SELECT name, age
+FROM students 
+WHERE ;
+
+
+-- 1. 查询所有年龄大于 18 且小于等于 25 岁的学生姓名和年龄，并将姓名转换为大写显示：
+
+SELECT 
+FROM students
+WHERE ;
+
+-- 2. 查询年龄不是 20 或 22 岁，且性别为 ‘女’ 的学生姓名和年龄：
+
+SELECT
+FROM students
+WHERE ;
+
+-- 3. 查询学生表中所有姓名不为 NULL，且姓名长度大于 3 的学生：
+
+SELECT 
+FROM students
+WHERE ;
+
+-- 4. 查询所有课程分数为负数或大于 100 的记录，并显示其绝对值（用于识别异常分数）：
+
+SELECT 
+FROM enrollments
+WHERE ;
+
+-- 5. 查询所有学生的姓名，并将其首字母大写（仅 SQLite 支持 substr()）：
+
+SELECT 
+FROM students
+WHERE ;
+
+-- 6. 查询年龄为偶数的学生，并显示其年龄的平方值：
+
+SELECT
+FROM students
+WHERE ;
+
+-- 7. 查询所有学生的姓名和当前日期：
+
+SELECT 
+FROM ;
+
+-- 8. 查询学生表中所有男生且年龄在 20 ~ 30 岁之间，姓名长度在 3 到 5 之间的学生：
+
+SELECT 
+FROM students
+WHERE ;
+
+-- 9. 查询所有学生的年龄与 2025 年的差值（假设出生年份为 2025 - age）：
+
+SELECT 
+FROM students;
+
+-- 10. 查询成绩小于 60 且不为 NULL 的学生成绩，并保留 1 位小数：
+
+SELECT 
+FROM enrollments
+WHERE ;
+
+-- 11. 查询所有女生（gender = ‘F’），其姓名不包含空格，且姓名长度小于等于 6：
+
+SELECT n
+FROM students
+WHERE ;
+
+-- 12. 查询所有年龄为奇数的学生，并显示年龄的平方根（保留 2 位小数）：
+
+SELECT 
+FROM students
+WHERE ;
+
+-- 13. 查询所有姓氏是“Wang”的学生（假设姓氏为姓名前4个字母），并将姓氏替换为“小王”：
+
+SELECT 
+FROM students
+WHERE ;
+
+-- 14. 查询所有选课记录中，分数字段为空或为负值的记录（用于排查问题数据）：
+
+SELECT 
+FROM enrollments
+WHERE ;
+
+-- 15. 查询学生信息中年龄不是 18、19、20，并且姓名不是 NULL 的学生姓名和年龄：
+
+SELECT 
+FROM students
+WHERE ;
+
+-- 16. 查询课程编号在 100 到 199 之间，且不属于 department_id 为 3 或 5 的课程：
+
+SELECT course_id, department_id
+FROM courses
+WHERE ;
+
+-- 17. 查询所有学生的姓名，并移除首尾空格（使用 TRIM）后再转换为大写：
+
+SELECT 
+FROM students;
+
+-- 18. 查询所有教师的 ID，并使用 POWER 函数显示其 ID 的立方值（例如 id³）：
+
+SELECT 
+FROM teachers;
+
+-- 19. 查询所有学生年龄，显示其上取整与下取整的结果（CEIL / FLOOR）：
+
+SELECT age
+FROM students;
+
+-- 20. 查询所有学生姓名，并显示名字中是否包含子字符串 “lee”（返回位置）：
+
+SELECT name
+FROM students;
+
+-- 21. 查询所有课程信息，并用 RANDOM() 生成一个模拟评分字段(mock_score)：
+
+SELECT course_id, teacher_id
+FROM courses;
+
+-- 22. 查询所有学生的姓名和注册当天的日期、时间（DATETIME）：
+
+SELECT name
+FROM students;
+
+-- 23. 查询所有学生的姓名、出生年份（假设今年是 2025），并使用 STRFTIME 提取当前月份：
+
+SELECT name
+FROM students;
+
+
+-- 24. 查询所有学生中年龄在 22 到 25 且不等于 23 岁的学生，按姓名长度倒序排列：
