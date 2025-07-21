@@ -1,0 +1,70 @@
+SELECT * 
+FROM students;
+
+-- 查找年龄在 20 到 25 岁之间，且是女性的学生
+SELECT * 
+FROM students
+WHERE ?;
+
+-- 查找年龄大于 22 岁，或者性别是男性的学生
+SELECT * 
+FROM students
+WHERE ?;
+
+-- 查找名字以字母 ‘A’ 开头，或者年龄小于 20 且是男性的学生
+SELECT * 
+FROM students
+WHERE ?;
+
+-- 查找没有部门或年龄小于 21 的学生
+SELECT * 
+FROM students
+WHERE ?;
+
+-- 查找名字不为空，且性别是 女 或者年龄超过 25 的学生
+SELECT * 
+FROM students
+WHERE ?;
+
+-- 找出名字以 ‘A’ 开头的学生，并显示小写版本
+SELECT name, ?
+FROM students
+WHERE ?;
+
+-- 查找名字中是否包含 ‘li’ 子字符串的位置
+SELECT name, ? 
+FROM students 
+WHERE ?;
+
+-- 将名字中的 ‘a’ 替换成 ‘A’
+SELECT name, ?
+FROM students 
+WHERE ?;
+
+-- 去除名学生字前后的空格并截取学生名字的前3个字符
+SELECT name, ?
+FROM students 
+WHERE ?;
+
+-- 找出名字长度为偶数，且性别为  女 的学生
+SELECT * 
+FROM students
+WHERE ?;
+
+-- 找出名字前3个字母为 ‘Ali’ 或 ‘Bob’ 的学生
+SELECT * 
+FROM students
+WHERE ;
+
+-- 查找学生中年龄大于等于 21，且年龄的平方根大于 4
+SELECT * FROM students
+WHERE ?;
+
+SELECT * 
+FROM courses;
+-- 找出课程有指定老师且有指定系别的（过滤掉有 NULL 的课程）
+SELECT * 
+FROM courses
+WHERE  ?;
+
+--
