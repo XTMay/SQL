@@ -1,0 +1,146 @@
+SELECT *
+FROM students;
+
+-- 统计每个系的学生人数	
+	SELECT department_id, COUNT(student_id) AS student_count
+	FROM students
+	GROUP BY department_id;
+	
+	
+-- 统计每个性别的人数	
+	SELECT gender, COUNT(*) AS count
+	FROM students
+	GROUP BY gender;
+	
+	
+-- 统计各课程的平均分数	
+	SELECT course_id, AVG(score) AS avg_score
+	FROM enrollments
+	GROUP BY course_id;
+	
+	
+-- 统计每门课的最低和最高成绩	
+	SELECT course_id, MIN(score) AS min_score, MAX(score) AS max_score
+	FROM enrollments
+	GROUP BY course_id;
+	
+	
+-- 统计每个老师教授的课程数量	
+	SELECT teacher_id, COUNT(*) AS course_count
+	FROM courses
+	GROUP BY teacher_id;
+	
+	
+-- 统计每个系年龄大于20岁的学生人数	
+	SELECT department_id, COUNT(*) AS count
+	FROM students
+	WHERE age > 20
+	GROUP BY department_id;
+	
+	
+-- 统计每个学生是否有成绩（非 NULL）的课程数量	
+	SELECT student_id, COUNT(score) AS scored_course_count
+	FROM enrollments
+	GROUP BY student_id;
+	
+	
+-- 统计各课程分数大于等于80的学生人数	
+	SELECT course_id, COUNT(*) AS high_score_count
+	FROM enrollments
+	WHERE score >= 80
+	GROUP BY course_id;
+	
+	
+-- 统计每个课程是否有 NULL 成绩记录	
+	SELECT course_id, SUM(CASE WHEN score IS NULL THEN 1 ELSE 0 END) AS null_score_count
+	FROM enrollments
+	GROUP BY course_id;
+	
+-- 统计每个系中学生姓名长度超过4的数量	
+	SELECT department_id, COUNT(*) AS count
+	FROM students
+	WHERE LENGTH(name) > 4
+	GROUP BY department_id;
+	
+-- 找出每个系平均年龄大于21的系	
+	SELECT department_id, AVG(age) AS avg_age
+	FROM students
+	WHERE age IS NOT NULL
+	GROUP BY department_id
+	HAVING AVG(age) > 21;
+	
+	
+-- 找出有超过 1 个学生参加且平均分大于85的课程	
+	SELECT course_id, COUNT(*) AS count, AVG(score) AS avg_score
+	FROM enrollments
+	WHERE score IS NOT NULL
+	GROUP BY course_id
+	HAVING COUNT(*) > 1 AND AVG(score) > 85;
+	
+	
+-- 统计每个性别下，姓名不为 NULL 的学生平均年龄，排除年龄为 NULL	
+	SELECT gender, AVG(age) AS avg_age
+	FROM students
+	WHERE name IS NOT NULL AND age IS NOT NULL
+	GROUP BY gender;
+	
+	
+-- 统计每个学生的总分，但只保留总分在 150 到 200 之间的记录	
+	SELECT student_id, SUM(score) AS total_score
+	FROM enrollments
+	WHERE score IS NOT NULL
+	GROUP BY student_id
+	HAVING SUM(score) BETWEEN 150 AND 200;
+	
+	
+-- 按课程分组，计算平均分、人数，要求平均分非空且不少于2人	
+	SELECT course_id, AVG(score) AS avg_score, COUNT(*) AS student_count
+	FROM enrollments
+	WHERE score IS NOT NULL
+	GROUP BY course_id
+	HAVING COUNT(*) >= 2;
+	
+	
+-- 找出平均年龄最小的性别组（先分组，再排序取TOP 1）	
+	SELECT gender, AVG(age) AS avg_age
+	FROM students
+	WHERE age IS NOT NULL
+	GROUP BY gender
+	ORDER BY avg_age ASC
+	LIMIT 1;
+	
+	
+-- 找出所有分数为整数的课程及其平均分	
+	SELECT course_id, AVG(score) AS avg_score
+	FROM enrollments
+	WHERE score IS NOT NULL AND score = FLOOR(score)
+	GROUP BY course_id;
+	
+	
+-- 统计每个学生的总分并计算其分数平方和（练 POWER）	
+	SELECT student_id, SUM(score) AS total_score, SUM(POWER(score, 2)) AS sum_square
+	FROM enrollments
+	WHERE score IS NOT NULL
+	GROUP BY student_id;
+	
+	
+-- 找出名字包含字母 “a” 的学生，按系分组统计人数	
+	SELECT department_id, COUNT(*) AS count
+	FROM students
+	WHERE name IS NOT NULL AND name LIKE '%a%'
+	GROUP BY department_id;
+	
+	
+-- 找出所有课程中，成绩波动超过20（max - min > 20）的课程	
+	SELECT course_id, MAX(score) - MIN(score) AS score_range
+	FROM enrollments
+	WHERE score IS NOT NULL
+	GROUP BY course_id
+	HAVING MAX(score) - MIN(score) > 20;
+	
+	
+	
+	
+	
+	
+	

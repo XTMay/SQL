@@ -1,0 +1,94 @@
+-- BETWEEN x AND y
+-- NOT BETWEEN x AND y
+-- IN (v1, v2, v3)
+-- NOT IN (v1, v2, v3)
+-- IS NULL
+-- IS NOT NULL
+-- NOT condition
+-- condition1 AND condition2
+-- condition1 OR condition2
+
+-- ROUND(x)
+-- ABS(x)
+-- CEIL(x)
+-- FLOOR(x)
+-- POWER(x, y)
+-- SQRT(x)
+-- RANDOM()
+
+-- LENGTH(s)
+-- UPPER(s)
+-- LOWER(s)
+-- SUBSTR(s, start, len)
+-- TRIM(s)
+-- LTRIM(s)
+-- RTRIM(s)
+-- REPLACE(s, old, new)
+-- INSTR(s, substr)
+
+-- DATE('now')
+-- TIME('now')
+-- DATETIME('now')
+-- STRFTIME('%Y', 'now')
+-- STRFTIME('%m', 'now')
+-- STRFTIME('%d', 'now')
+-- STRFTIME('%H', 'now')
+-- STRFTIME('%M', 'now')
+-- STRFTIME('%S', 'now')
+-- STRFTIME('%w', 'now')
+-- STRFTIME('%j', 'now')
+-- STRFTIME('%W', 'now')
+-- JULIANDAY('now')
+
+-- DATE('now', '+1 day')
+-- DATE('now', '-3 day')
+-- DATETIME('now', '+3 hours', '-15 minutes')
+-- DATE('2025-01-01', '-1 month')
+-- DATE('2025-01-01', '+1 year', '-1 month')
+
+-- 查询GPA在3.0到4.0之间且年龄小于22岁的学生。
+-- Find students whose GPA is between 3.0 and 4.0 and age is less than 22.
+
+-- 查找学生中入学日期早于2020年，且GPA不在3.5到4.0之间的记录。
+-- Find students enrolled before 2020 whose GPA is not between 3.5 and 4.0.
+
+
+-- 查询名字包含“小”但不包含“明”的学生。
+-- Find students whose names contain ‘小’ but not ‘明’.
+
+-- 查询分数四舍五入后大于90的选课记录。
+-- Find enrollments where rounded score > 90.
+
+
+-- 查询名字中包含“红”的学生，其名字长度不小于3。
+-- Find students whose name contains ‘红’ and LENGTH(name) ≥ 3.
+
+
+-- 显示学生名字最后两个字符。
+-- Show SUBSTR(name, -2, 2) for each student.
+
+-- 查询包含“编程”关键字的课程名。
+-- Find courses where INSTR(course_name, ‘编程’) > 0.
+
+
+-- 查询所有学生出生月份是2月或3月的。
+-- Find students whose birth month is February or March.
+
+
+-- 查询三天前的日期。
+-- What was the date 3 days ago?
+
+-- 显示每位教师入职的年份和月份。
+-- Show hire year and month for each teacher.
+
+-- 查询入职年份为2018或之后的教师。
+-- Find teachers hired in or after 2018.
+
+-- 查询学生名字包含“刚”或“洁”，且年龄不在20到22之间的记录。
+-- Find students whose names include ‘刚’ or ‘洁’ and age NOT BETWEEN 20 AND 22.
+
+-- 查询学生入学日期早于2021年，且其出生年为偶数。
+-- Find students enrolled before 2021 whose birth year is even.
+
+-- 查询学生中名字长度等于2，GPA四舍五入后为4的记录。
+-- Find students whose name length = 2 and rounded GPA = 4.
