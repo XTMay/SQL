@@ -5,7 +5,8 @@ SELECT *
   FROM courses;
 
 SELECT *
-  FROM teachers;-- 🧮 数值函数类
+  FROM teachers;
+
 -- 1. 显示所有学生的 GPA 以及四舍五入后的 GPA（保留 1 位小数）。-- ROUND(gpa, 1)
 SELECT st.name,
        st.gpa,
@@ -75,24 +76,4 @@ FROM courses;
 
 
 -- ORDERBY, LIMIT
--- birth_date, enrolled_date-- DATE('now')
-SELECT DATE('now') 
-  FROM students;
 
-SELECT *
-  FROM students;-- DATETIME('now')
-
-SELECT DATETIME('now') 
-  FROM students;-- STRFTIME('%Y', 'now')
-
-SELECT STRFTIME('%Y', 'now') 
-  FROM students;-- STRFTIME('%m', 'now')
-
-SELECT STRFTIME('%m', 'now') 
-  FROM students;-- STRFTIME('%d', 'now')
-
-SELECT STRFTIME('%d', 'now') 
-  FROM students;-- JULIANDAY('now')
-
-SELECT JULIANDAY('now') 
-  FROM students;

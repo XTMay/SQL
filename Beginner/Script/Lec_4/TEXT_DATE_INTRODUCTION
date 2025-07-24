@@ -1,0 +1,258 @@
+/*
+BETWEEN x AND y
+NOT BETWEEN x AND y
+IN (v1)
+NOT IN (v1, v2, v3)
+IS NULL
+IS NOT NULL
+NOT 条件
+ ROUND(x)
+ ABS(x) 
+ CEIL(3.142) = 4.0 / FLOOR(3.142) = 3.0
+ POWER(x, y) 
+ SQRT(x) 
+ RANDOM() 
+ LENGTH(s) 
+ UPPER(s) / LOWER(s) 
+ SUBSTR(s, start, len) -- index: 1 
+ TRIM("    ooooo   ") / LTRIM() / RTRIM() 
+ REPLACE(s, old, new) 
+ INSTR(s, substr) -- index, 0
+ */
+
+-- 查找年龄在 20 到 25 岁之间，且是女性的学生
+--Find students aged between 20 and 25, and who are female
+
+SELECT * 
+FROM students
+WHERE age BETWEEN 20 AND 25
+  AND gender = '女';
+
+
+-- 查找年龄大于 22 岁，或者性别是男性的学生
+-- Find students older than 22, or male students
+
+SELECT * 
+FROM students
+WHERE age > 22 
+   OR gender = '男';
+
+
+-- 查找名字以 ‘A’ 开头，或者（年龄小于 20 且性别为男性）的学生 
+-- Find students whose names start with ‘A’, or (age < 20 and gender = male)
+
+SELECT * 
+FROM students
+WHERE name LIKE 'A%' 
+   OR (age < 20 AND gender = '男');
+
+
+-- 查找没有部门，或年龄小于 21 岁的学生
+-- Find students with no department OR whose age is less than 21
+
+SELECT * 
+FROM students
+WHERE department_id IS NULL 
+   OR age < 21;
+
+
+-- 查找名字不为空，且（性别是女 或 年龄大于25） 的学生
+-- Find students whose name is not null, and (gender is female OR age > 25)
+
+SELECT * 
+FROM students
+WHERE name IS NOT NULL 
+  AND (gender = '女' OR age > 25);
+
+
+-- 找出名字以 ‘A’ 开头且长度为 2 的学生
+-- Find students whose names start with ‘A’ and have exactly 2 letters
+-- PRAGMA case_sensitive_like = OFF;
+-- GLOB *
+
+/* SUBSTR(s, start, len) -- index: 1 
+ TRIM("    ooooo   ") / LTRIM() / RTRIM() 
+ REPLACE(s, old, new) 
+ INSTR(s, substr) -- index, 0*/
+
+SELECT *
+FROM students
+WHERE = '1' AND LENGTH(name) = 2;
+
+
+-- 查找名字中包含 ‘li’ 的位置（字符串位置）
+-- Find the position of substring ‘li’ in each student’s name
+-- the name contains 'e' position > 2 
+SELECT name, INSTR(name, 'e')
+FROM students
+WHERE INSTR(name, 'e') > 2;
+
+
+/* LENGTH(s) 
+ UPPER(s) / LOWER(s) 
+ SUBSTR(s, start, len) -- index: 1 
+ TRIM("    ooooo   ") / LTRIM() / RTRIM() 
+ REPLACE(s, old, new) 
+ INSTR(s, substr) -- index, 0*/
+-- 将名字中的小写 ‘a’ 替换成大写 ‘A’
+-- Replace lowercase ‘a’ with uppercase ‘A’ in student names
+
+SELECT name, REPLACE(name, 'a', 'A')
+FROM students;
+
+
+-- 去除名字前后空格，并截取前3个字符
+-- Trim whitespace and get the first 3 characters of the name
+
+SELECT name, SUBSTR(TRIM(name), 1, 3)
+FROM students;
+
+-- 找出名字长度为偶数，且性别为女的学生
+-- Find students with even-length names and who are female
+
+SELECT * 
+FROM students
+WHERE LENGTH(name) % 2 = 0 AND gender = '女';
+
+-- 找出名字前三个字母是 ‘Ali’ 或 ‘Bob’ 的学生
+-- Find students whose names start with ‘Ali’ or ‘Bob’
+
+SELECT * 
+FROM students
+WHERE (name LIKE 'Ali%') OR (name LIKE 'Bob%');
+
+-- 查找年龄大于等于 21，且年龄的平方根大于 4 的学生
+-- Find students age ≥ 21 AND whose square root of age > 4
+
+SELECT * 
+FROM students
+WHERE age >= 21 AND SQRT(age) > 4;
+
+
+
+--------------------DateTime--------------------
+-- 查询所有学生信息  
+-- Query all student information  
+SELECT * FROM students;
+
+-- 查询所有课程信息  
+-- Query all course information  
+SELECT * FROM courses;
+
+-- 查询所有教师信息  
+-- Query all teacher information  
+SELECT * FROM teachers;
+
+-- birth_date, enrolled_date -- 当前日期  
+-- birth_date, enrolled_date -- DATE('now') means today’s date
+
+/*  
+日期/时间函数演示  
+Date/Time function usage examples  
+*/
+-- 当前日期/时间  
+-- Current date/time  
+SELECT DATE('now');  
+SELECT TIME('now'); 
+SELECT DATETIME('now');
+
+-- 提取时间组件  
+-- Extract components from date  
+SELECT STRFTIME('%Y', 'now');   -- 年 Year  
+SELECT STRFTIME('%m', 'now');   -- 月 Month  
+SELECT STRFTIME('%d', 'now');   -- 日 Day  
+SELECT STRFTIME('%H', 'now');   -- 小时 Hour  
+SELECT STRFTIME('%M', 'now');  -- 分钟 Minute  
+SELECT STRFTIME('%S', 'now');  -- 秒 Second  
+SELECT STRFTIME('%w', 'now');  -- 星期几 Weekday (0=Sunday)  
+SELECT STRFTIME('%j', 'now');  -- 一年中的第几天 Day of year  
+SELECT STRFTIME('%W', 'now');  -- 一年中的第几周 Week number
+
+-- 日期偏移操作  
+-- Date offset examples  
+SELECT DATE('now', '+1 day'); 
+SELECT DATE('now', '-7 day'); 
+SELECT DATETIME('now', '+3 hours', '-15 minutes');
+SELECT DATE('2025-01-01', '+1 month');
+SELECT DATE('2025-01-01', '+1 year', '-1 day');
+SELECT JULIANDAY('now');
+
+-- 查询所有学生的姓名和出生年份（从 birth_date 提取年）  
+-- Query all student names and extract birth year  
+SELECT name, ? 
+FROM students;
+
+-- 查询所有今天注册的学生  
+-- Query students enrolled today  
+SELECT name, enrolled_date  
+FROM students  
+WHERE ?;
+
+-- 查询最近 7 天内注册的学生  
+-- Students enrolled in the past 7 days  
+SELECT name, enrolled_date  
+FROM students  
+WHERE ?;
+
+-- 查询所有课程的持续天数  
+-- Duration of each course (days since created_at)  
+SELECT course_name, created_at, ?
+FROM courses;
+
+-- 查询出生在 2000 年后的学生  
+-- Students born after 2000  
+SELECT name, birth_date  
+FROM students  
+WHERE ?;
+
+-- 查询学生注册年月（格式 2025-07）  
+-- Show student enrollment month in 'YYYY-MM' format  
+SELECT name, ?
+FROM students;
+
+-- 查询注册时间是上午的学生  
+-- Students who registered in the morning (00:00–11:59)  
+-- CAST(xxxx AS INTEGER)
+SELECT name, ? 
+FROM students  
+WHERE ?;
+
+-- 查询在周末注册的学生  
+-- Students who registered on weekend (Saturday or Sunday)  
+-- 0=Sunday, 6=Saturday
+SELECT name, enrolled_date, ?  
+FROM students  
+WHERE ?;  
+
+-- 查询出生月份为 6 月的学生  
+-- Students born in June  
+SELECT name, birth_date  
+FROM students  
+WHERE ?;
+
+-- 查询注册距今天的天数  
+-- Days since enrollment  
+SELECT name, enrolled_date,  
+       ?  
+FROM students;
+
+-- 查询每门课程的结束时间延后 7 天后的日期  
+-- Course end date extended by 7 days  
+SELECT course_name, created_at, ? 
+FROM courses;
+
+-- 查询课程开始后 1 个月 14 天的日期  
+-- Course date after 1 month and 14 days  
+SELECT course_name, created_at,  
+       ?  
+FROM courses;
+
+-- 查询年龄升序排列的前 5 个学生  
+-- Top 5 youngest students  
+SELECT name, age  
+FROM students;
+
+-- 查询课程表中最近创建的记录  
+-- Most recently created courses  
+SELECT course_id, DATETIME(created_at) AS created_at  
+FROM courses;
