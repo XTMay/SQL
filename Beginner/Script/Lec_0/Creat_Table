@@ -1,0 +1,67 @@
+CREATE TABLE courses (
+    course_id     INTEGER  PRIMARY KEY AUTOINCREMENT,
+    course_name   TEXT     NOT NULL,
+    credit        REAL,
+    schedule_time TIME,
+    teacher_id    INTEGER,
+    department_id INTEGER,
+    is_mandatory  INTEGER  DEFAULT 0,
+    created_at    DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (
+        teacher_id
+    )
+    REFERENCES teachers (teacher_id),
+    FOREIGN KEY (
+        department_id
+    )
+    REFERENCES departments (department_id) 
+);
+
+CREATE TABLE departments (
+    department_id   INTEGER  PRIMARY KEY AUTOINCREMENT,
+    department_name TEXT     NOT NULL,
+    description     TEXT,
+    created_at      DATETIME DEFAULT CURRENT_TIMESTAMP,
+    is_active       INTEGER  DEFAULT 1
+);
+
+CREATE TABLE enrollments (
+    enrollment_id INTEGER  PRIMARY KEY AUTOINCREMENT,
+    student_id    INTEGER,
+    course_id     INTEGER,
+    score         REAL,
+    enrolled_at   DATETIME DEFAULT CURRENT_TIMESTAMP,
+    is_passed     INTEGER,
+    FOREIGN KEY (
+        student_id
+    )
+    REFERENCES students (student_id),
+    FOREIGN KEY (
+        course_id
+    )
+    REFERENCES courses (course_id) 
+);
+CREATE TABLE students (
+    student_id    INTEGER PRIMARY KEY AUTOINCREMENT,
+    name          TEXT    NOT NULL,
+    age           INTEGER,
+    gender        TEXT,
+    birth_date    DATE,
+    enrolled_date DATE,
+    gpa           REAL,
+    department_id INTEGER,
+    is_active     INTEGER DEFAULT 1,
+    FOREIGN KEY (
+        department_id
+    )
+    REFERENCES departments (department_id) 
+);
+
+CREATE TABLE teachers (
+    teacher_id   INTEGER PRIMARY KEY AUTOINCREMENT,
+    name         TEXT    NOT NULL,
+    hire_date    DATE,
+    salary       REAL,
+    title        TEXT,
+    is_full_time INTEGER DEFAULT 1
+);
