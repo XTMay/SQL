@@ -1,0 +1,62 @@
+-- 1. players 玩家信息表
+CREATE TABLE players (
+    player_id INTEGER PRIMARY KEY,             -- 玩家唯一ID
+    username TEXT NOT NULL,                    -- 玩家昵称
+    rank_tier TEXT,                            -- 当前排名
+    join_date DATE,                            -- 注册日期
+    winrate REAL                                -- 胜率（0~1之间小数）
+);
+
+-- 2. heroes 英雄信息表
+CREATE TABLE heroes (
+    hero_id INTEGER PRIMARY KEY,               -- 英雄唯一ID
+    hero_name TEXT NOT NULL,                   -- 英雄名称
+    role TEXT,                                 -- 角色类型（如 Assassin, Tank）
+    skin TEXT                                   -- 英雄造型
+);
+
+-- 3. matches 比赛记录表
+CREATE TABLE matches (
+    match_id INTEGER PRIMARY KEY,              -- 比赛唯一ID
+    player_id INTEGER NOT NULL,                -- 玩家ID（外键）
+    hero_id INTEGER NOT NULL,                  -- 英雄ID（外键）
+    result TEXT CHECK(result IN ('Victory', 'Defeat')),  -- 比赛结果
+    kills INTEGER DEFAULT 0,                   -- 击杀数
+    deaths INTEGER DEFAULT 0,                  -- 死亡数
+    assists INTEGER DEFAULT 0,                 -- 助攻数
+    match_date DATE,                           -- 比赛日期
+    item_id INTEGER,                           -- 装备ID（外键）
+    master_skill TEXT,                         -- 召唤师技能
+    gold INTEGER,                              -- 金币
+    damage_output INTEGER,                     -- 对英雄伤害
+    damage_input INTEGER,                      -- 承受英雄伤害
+    participation_rate REAL,                   -- 参团率（0~1之间小数）
+
+    FOREIGN KEY(player_id) REFERENCES players(player_id),
+    FOREIGN KEY(hero_id) REFERENCES heroes(hero_id),
+    FOREIGN KEY(item_id) REFERENCES item(item_id)
+);
+
+-- 4. friends 好友关系表（可选）
+CREATE TABLE friends (
+    player_id INTEGER NOT NULL,                -- 玩家ID
+    friend_id INTEGER NOT NULL,                -- 好友ID
+
+    PRIMARY KEY (player_id, friend_id),
+    FOREIGN KEY(player_id) REFERENCES players(player_id),
+    FOREIGN KEY(friend_id) REFERENCES players(player_id)
+);
+
+-- 5. item 装备表
+CREATE TABLE item (
+    item_id INTEGER PRIMARY KEY,               -- 装备唯一ID
+    item_name TEXT NOT NULL,                   -- 装备名称
+    item_category TEXT                         -- 装备分类
+);
+
+-- 6. rank 排位表
+CREATE TABLE player_rank (
+    player_id INTEGER PRIMARY KEY,
+    rank_tier TEXT,                            -- 如 'Bronze', 'Silver', etc.
+    FOREIGN KEY(player_id) REFERENCES players(player_id)
+);
