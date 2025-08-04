@@ -1,0 +1,72 @@
+-- 查询所有课程及其授课教师的姓名和职称。
+-- List all courses with their teacher’s name and title.
+SELECT 
+    courses.course_name,
+    teachers.name AS teacher_name,
+    teachers.title
+FROM courses
+JOIN teachers ON courses.teacher_id = teachers.teacher_id;
+
+-- 查询所有课程及其所属系名称，如果课程没有系，仍然要显示。
+-- List all courses and their department names, including courses with no department.
+
+SELECT 
+    courses.course_name,
+    departments.department_name
+FROM courses
+LEFT JOIN departments ON courses.department_id = departments.department_id;
+
+-- 找出没有修过任何课程的学生。
+-- Find students who have not enrolled in any course.
+
+SELECT 
+    students.name
+FROM students
+LEFT JOIN enrollments ON students.student_id = enrollments.student_id
+WHERE enrollments.enrollment_id IS NULL;
+
+-- 列出每位教师教授的课程数量。
+-- List each teacher and the number of courses they teach.
+
+SELECT 
+    teachers.name,
+    COUNT(courses.course_id) AS course_count
+FROM teachers
+LEFT JOIN courses ON teachers.teacher_id = courses.teacher_id
+GROUP BY teachers.teacher_id;
+
+-- 查询每个系的平均学生 GPA。
+-- Find the average GPA of students in each department.
+
+SELECT 
+    departments.department_name,
+    AVG(students.gpa) AS avg_gpa
+FROM departments
+JOIN students ON departments.department_id = students.department_id
+GROUP BY departments.department_id;
+
+
+-- 找出所有及格的学生、课程名称以及该课程的学分。
+-- Find all students who passed courses, the course names, and credits.
+
+SELECT 
+    students.name AS student_name,
+    courses.course_name,
+    courses.credit
+FROM enrollments
+JOIN students ON enrollments.student_id = students.student_id
+JOIN courses ON enrollments.course_id = courses.course_id
+WHERE enrollments.is_passed = 1;
+
+-- 查询所有学生的姓名、所在系、以及每门已选课程的名称和得分。
+-- Query all students’ names, their department, enrolled course names, and scores.
+
+SELECT 
+    students.name AS student_name,
+    departments.department_name,
+    courses.course_name,
+    enrollments.score
+FROM students
+JOIN departments ON students.department_id = departments.department_id
+JOIN enrollments ON students.student_id = enrollments.student_id
+JOIN courses ON enrollments.course_id = courses.course_id;

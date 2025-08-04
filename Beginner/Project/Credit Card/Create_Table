@@ -1,1 +1,59 @@
--- Create Table
+-- 1. customers (客户表)
+CREATE TABLE customers (
+  cc_num BIGINT PRIMARY KEY,        -- 信用卡号
+  first TEXT,                       -- 名字
+  last TEXT,                        -- 姓氏
+  gender CHAR(1),                   -- 性别
+  dob DATE,                         -- 出生日期
+  job TEXT,                         -- 职业
+  street TEXT,                      -- 街道地址
+  city TEXT,                        -- 城市
+  state CHAR(2),                    -- 州缩写
+  zip INT,                          -- 邮编
+  lat FLOAT,                        -- 用户纬度
+  long FLOAT,                       -- 用户经度
+  city_pop INT                      -- 城市人口
+);
+
+-- 2. merchants (商家表)
+CREATE TABLE merchants (
+  merchant_id INTEGER PRIMARY KEY AUTOINCREMENT,  -- 商家ID
+  merchant_name TEXT UNIQUE,                      -- 商家名称
+  category TEXT,                                  -- 商家类别
+  merch_lat FLOAT,                                -- 纬度
+  merch_long FLOAT                                -- 经度
+);
+
+-- 3. transactions (交易表)
+CREATE TABLE transactions (
+  trans_num TEXT PRIMARY KEY,      -- 交易编号
+  cc_num BIGINT,                   -- 客户信用卡号
+  merchant_id INT,                 -- 商家ID
+  trans_date DATETIME,            -- 交易时间
+  unix_time BIGINT,               -- Unix时间戳
+  amt FLOAT,                      -- 交易金额
+  is_fraud BOOLEAN,               -- 是否欺诈
+  FOREIGN KEY(cc_num) REFERENCES customers(cc_num),
+  FOREIGN KEY(merchant_id) REFERENCES merchants(merchant_id)
+);
+
+-- 4. categories (商家分类表，可选)
+CREATE TABLE categories (
+  category TEXT PRIMARY KEY,       -- 类别名称
+  description TEXT                 -- 描述
+);
+
+-- 5. states (州表，可选)
+CREATE TABLE states (
+  state_code CHAR(2) PRIMARY KEY,  -- 州缩写
+  state_name TEXT                  -- 州全名
+);
+
+-- 6. cities (城市表，可选)
+CREATE TABLE cities (
+  city TEXT,                       -- 城市名
+  state_code CHAR(2),              -- 州缩写
+  city_pop INT,                    -- 城市人口
+  lat FLOAT,                       -- 纬度
+  long FLOAT                       -- 经度
+);

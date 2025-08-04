@@ -1,0 +1,134 @@
+/*  
+日期/时间函数演示  
+Date/Time function usage examples  
+*/
+-- 当前日期/时间  
+-- Current date/time  
+SELECT DATE('now');  
+SELECT TIME('now'); 
+SELECT DATETIME('now');
+
+-- 提取时间组件  
+-- Extract components from date  
+SELECT STRFTIME('%Y', 'now');   -- 年 Year  
+SELECT STRFTIME('%m', 'now');   -- 月 Month  
+SELECT STRFTIME('%d', 'now');   -- 日 Day  
+SELECT STRFTIME('%H', 'now');   -- 小时 Hour  
+SELECT STRFTIME('%M', 'now');  -- 分钟 Minute  
+SELECT STRFTIME('%S', 'now');  -- 秒 Second  
+SELECT STRFTIME('%w', 'now');  -- 星期几 Weekday (0=Sunday)  
+SELECT STRFTIME('%j', 'now');  -- 一年中的第几天 Day of year  
+SELECT STRFTIME('%W', 'now');  -- 一年中的第几周 Week number
+
+-- 日期偏移操作  
+-- Date offset examples  
+SELECT DATE('now', '+3 day'); 
+SELECT DATE('now', '-7 day'); 
+SELECT DATETIME('now', '+3 hours', '-15 minutes');
+SELECT DATE('2025-01-01', '+1 month');
+SELECT DATE('2025-01-01', '+1 year', '+1 month', '-1 day');
+SELECT JULIANDAY('now');
+
+SELECT * 
+FROM students;
+
+-- 查询所有学生的姓名和出生年份（从 birth_date 提取年）  
+-- Query all student names and extract birth year  >= 2000
+SELECT name, birth_date, STRFTIME('%Y', birth_date)
+FROM students
+WHERE birth_date IS NOT NULL AND STRFTIME('%Y', birth_date) >= '2000'; 
+
+SELECT *
+FROM courses;
+
+-- 查询所有今天注册的学生  
+-- Query students enrolled today  
+SELECT name, enrolled_date  
+FROM students  
+WHERE enrolled_date = DATE('now');
+-- TODAY
+
+-- 8/4 - 7/28
+-- 查询最近 7 天内注册的学生  
+-- Students enrolled in the past 7 days  
+SELECT name, enrolled_date  
+FROM students  
+WHERE enrolled_date >= DATE('now', '-7 day');
+
+-- STRFTIME('%j', 'now');
+-- JULIANDAY('now');
+-- 查询所有课程的持续天数  
+-- days (NOW) - (created_at)
+-- Duration of each course (days since(-) created_at) 
+
+SELECT JULIANDAY('now'); -- diff_1 = now - Baseline
+-- diff_2 = created_at - Baseline
+-- diff_1 - diff_2 = now - Baseline - created_at + Baseline
+
+SELECT course_name, created_at, JULIANDAY('now') - JULIANDAY(created_at)
+FROM courses;
+
+-- 查询出生在 2000 年后的学生  
+-- Students born after 2000  
+SELECT name, birth_date, STRFTIME('%Y', birth_date)
+FROM students  
+WHERE STRFTIME('%Y', birth_date) > '2000';
+
+-- 查询学生注册年月（格式 2025-07）  
+-- Show student enrollment month in 'YYYY-MM' format  
+SELECT name, STRFTIME('%Y-%m', enrolled_date) AS enrollment_month
+FROM students
+WHERE (enrolled_date IS NOT NULL) AND enrolled_date >= (DATE('now', '-5 year'));
+
+SELECT *
+FROM students;
+-- 查询注册时间是上午的学生  
+-- course which schedule in the morning (00:00–11:59)  
+-- CAST(xxxx AS INTEGER)
+SELECT schedule_time
+FROM courses  
+WHERE '12' <= STRFTIME('%H', schedule_time) AND STRFTIME('%H', schedule_time) < '18';
+
+
+SELECT STRFTIME('%H', 'now');   -- 小时 Hour  
+SELECT STRFTIME('%M', 'now');  -- 分钟 Minute 
+
+-- 查询在周末注册的学生  
+-- Students who registered on weekend (Saturday or Sunday)  
+-- 0=Sunday, 6=Saturday
+SELECT name, enrolled_date, ?  
+FROM students  
+WHERE ?;  
+
+-- 查询出生月份为 6 月的学生  
+-- Students born in June  
+SELECT name, birth_date  
+FROM students  
+WHERE ?;
+
+-- 查询注册距今天的天数  
+-- Days since enrollment  
+SELECT name, enrolled_date,  
+       ?  
+FROM students;
+
+-- 查询每门课程的结束时间延后 7 天后的日期  
+-- Course end date extended by 7 days  
+SELECT course_name, created_at, ? 
+FROM courses;
+
+-- 查询课程开始后 1 个月 14 天的日期  
+-- Course date after 1 month and 14 days  
+SELECT course_name, created_at,  
+       ?  
+FROM courses;
+
+-- 查询年龄升序排列的前 5 个学生  
+-- Top 5 youngest students  
+SELECT name, age  
+FROM students;
+
+-- 查询课程表中最近创建的记录  
+-- Most recently created courses  
+SELECT course_id, DATETIME(created_at) AS created_at  
+FROM courses;
