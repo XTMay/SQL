@@ -1,0 +1,89 @@
+SELECT *
+FROM players;
+
+SELECT *
+FROM rank;
+
+SELECT *
+FROM heroes;
+
+SELECT *
+FROM items;
+
+SELECT *
+FROM friends;
+
+SELECT *
+FROM matches;
+
+-- 基础 & JOIN 查询 (INNER/OUTER_LEFT, RIGHT)
+-- 查询所有胜率高于 50% 的玩家昵称和对应段位名称。
+
+SELECT p.username, r.rank_name, p.winrate
+FROM players AS p
+INNER JOIN rank AS r
+ON p.rank_id = r .rank_id
+WHERE p.winrate > 0.5;
+
+-- 查询每位玩家使用过哪些召唤师技能（master_skill），不重复。
+SELECT p.player_id, m.master_skill
+FROM players AS p
+JOIN matches AS m
+ON p.player_id = m.player_id
+GROUP BY p.player_id, m.master_skill;
+
+
+-- 查询所有使用“法师”角色英雄的对局信息（玩家名、英雄名、胜负）。
+SELECT m.result, COUNT(m.player_id) -- COUNT(*), COUNT(col)
+FROM matches AS m
+JOIN heroes AS h
+ON m.hero_id = h.hero_id
+JOIN players AS p
+ON m.player_id = p.player_id
+WHERE h.role = '法师'
+GROUP BY m.result;
+
+
+-- 分组 GROUP BY + HAVING
+-- 查询胜场数（胜利次数）大于等于 3 的玩家昵称及胜场数。
+
+
+
+-- 查询每位玩家总击杀数、总死亡数、总助攻数，按击杀数从高到低排序。
+
+
+-- 日期 & 字符串函数
+-- 查询 2025 年注册的玩家用户名和注册日期。
+-- strftime('%Y', now)
+
+
+-- 查询所有段位名称长度大于 2 的段位及其 rank_order。
+-- LENGTH(name)
+
+
+
+-- 聚合 + ORDER + LIMIT
+-- 查询游戏中参与率（participation_rate）最高的前 5 场对局，包括玩家名、英雄名、参与率。
+
+
+
+-- 查询每种英雄角色平均击杀数（按角色分组）。
+
+
+
+
+-- 多条件 + 子查询
+-- 查询使用“战士”英雄且胜率高于 0.6 的玩家名称和胜率。
+
+
+-- 查询有 2 个以上好友的玩家 ID。
+
+
+-- 查询在所有对局中总金币收益最多的前 3 个玩家名和金币数。
+
+
+
+-- 查询每个段位的玩家数量，并按数量从多到少排序。
+
+
+
