@@ -1,0 +1,33 @@
+-- 检查表结构
+PRAGMA table_info('players');
+-- 查看表创建 SQL
+SELECT sql FROM sqlite_master WHERE type='table' AND name='players';
+
+-- 强制开启外键（很重要）
+PRAGMA foreign_keys = ON;
+
+-- 为 players 增加 UNIQUE 和 CHECK（如果是新建表直接加上，已有表需迁移）
+-- 新建时直接加
+CREATE TABLE players_new (
+  player_id INTEGER PRIMARY KEY,
+  username TEXT NOT NULL UNIQUE,
+  rank_id INTEGER REFERENCES rank(rank_id),
+  join_date TEXT DEFAULT (datetime('now')),
+  winrate REAL CHECK (winrate >= 0 AND winrate <= 1)
+);
+
+-- 创建索引（DDL 也包含索引的建定义）
+CREATE INDEX idx_matches_player ON matches(player_id);
+CREATE INDEX idx_matches_date ON matches(match_date);
+CREATE UNIQUE INDEX idx_players_username ON players_new(username);
+
+-- 修改表结构：ALTER TABLE 与通用迁移
+
+-- 添加列（SQLite 支持）
+ALTER TABLE players_new ADD COLUMN region TEXT DEFAULT 'CN';
+
+-- 重命名表
+ALTER TABLE players_new RENAME TO players_old;
+
+-- （部分 SQLite 版本）重命名列
+ALTER TABLE players_old RENAME COLUMN join_date TO registered_at;

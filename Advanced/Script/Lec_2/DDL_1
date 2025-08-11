@@ -1,0 +1,75 @@
+-- ==============================================
+-- 王者荣耀)(Arena of Valor)数据库 DDL 教学脚本
+-- 目标：掌握 CREATE / DROP / ALTER / TRUNCATE / COMMENT / RENAME
+-- 数据库环境：SQLite
+-- ==============================================
+
+-- 0. 如果存在旧表，先删除，保证脚本可重复运行
+DROP TABLE IF EXISTS Player_New;
+
+-------------------------------------------------
+-- 1. CREATE - 创建表
+-------------------------------------------------
+-- 创建一个玩家表，存储玩家基本信息
+CREATE TABLE Player_New (
+    player_id INTEGER PRIMARY KEY,     -- 玩家唯一ID
+    username TEXT NOT NULL,            -- 玩家用户名
+    rank_id INTEGER,                    -- 排位段位ID
+    join_date TEXT,                     -- 注册时间
+    winrate REAL                        -- 胜率
+);
+
+-- 查看表结构
+PRAGMA table_info(Player_New);
+
+-------------------------------------------------
+-- 2. ALTER - 修改表结构
+-------------------------------------------------
+-- 2.1 添加新列 email
+ALTER TABLE Player_New ADD COLUMN email TEXT;
+
+-- 2.2 修改列名（SQLite 从 3.25 版本开始支持）
+ALTER TABLE Player_New RENAME COLUMN winrate TO win_rate;
+
+-- 查看修改结果
+PRAGMA table_info(Player_New);
+
+-------------------------------------------------
+-- 3. TRUNCATE（SQLite 没有直接命令，用 DELETE 模拟）
+-------------------------------------------------
+-- 插入测试数据
+INSERT INTO Player_New (player_id, username, rank_id, join_date, win_rate, email)
+VALUES (1, 'ZhangSan', 3, '2024-05-10', 0.65, 'zhang@example.com');
+
+-- 查看数据
+SELECT * FROM Player_New;
+
+-- 清空数据（保留结构）
+DELETE FROM Player_New;
+
+
+-- 确认清空
+SELECT * FROM Player_New;
+
+-------------------------------------------------
+-- 4. COMMENT - 注释
+-------------------------------------------------
+-- SQLite 不支持 COMMENT 语句，可用 "--" 添加单行注释
+-- 例如：
+-- Player_New 表：存储玩家的基本信息，包括ID、用户名、段位、加入时间、胜率等
+
+-------------------------------------------------
+-- 5. RENAME - 重命名表
+-------------------------------------------------
+ALTER TABLE Player_New RENAME TO Player_Data;
+
+-- 确认新表名
+SELECT name FROM sqlite_master WHERE type='table';
+
+-------------------------------------------------
+-- 6. DROP - 删除表
+-------------------------------------------------
+DROP TABLE Player_Data;
+
+-- 确认表已删除
+SELECT name FROM sqlite_master WHERE type='table';
