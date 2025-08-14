@@ -1,33 +1,82 @@
--- 检查表结构
-PRAGMA table_info('players');
--- 查看表创建 SQL
-SELECT sql FROM sqlite_master WHERE type='table' AND name='players';
+-- ==============================================
+-- 王者荣耀)(Arena of Valor)数据库 DDL 教学脚本
+-- 目标：掌握 CREATE / DROP / ALTER / TRUNCATE / COMMENT / RENAME
+-- 数据库环境：SQLite
+-- ==============================================
 
--- 强制开启外键（很重要）
-PRAGMA foreign_keys = ON;
+-- 0. 如果存在旧表，先删除，保证脚本可重复运行
+DROP TABLE IF EXISTS Player_New;
 
--- 为 players 增加 UNIQUE 和 CHECK（如果是新建表直接加上，已有表需迁移）
--- 新建时直接加
-CREATE TABLE players_new (
-  player_id INTEGER PRIMARY KEY,
-  username TEXT NOT NULL UNIQUE,
-  rank_id INTEGER REFERENCES rank(rank_id),
-  join_date TEXT DEFAULT (datetime('now')),
-  winrate REAL CHECK (winrate >= 0 AND winrate <= 1)
+-------------------------------------------------
+-- 1. CREATE - 创建表
+-------------------------------------------------
+-- 创建一个玩家表，存储玩家基本信息
+CREATE TABLE Player_New (
+    player_id INTEGER PRIMARY KEY,     -- 玩家唯一ID
+    username TEXT NOT NULL,            -- 玩家用户名
+    rank_id INTEGER,                    -- 排位段位ID
+    join_date TEXT,                     -- 注册时间
+    winrate REAL                        -- 胜率
 );
 
--- 创建索引（DDL 也包含索引的建定义）
-CREATE INDEX idx_matches_player ON matches(player_id);
-CREATE INDEX idx_matches_date ON matches(match_date);
-CREATE UNIQUE INDEX idx_players_username ON players_new(username);
+-- 查看表结构
+PRAGMA table_info(Player_New);
 
--- 修改表结构：ALTER TABLE 与通用迁移
+-------------------------------------------------
+-- 2. ALTER - 修改表结构
+-------------------------------------------------
+-- 2.1 添加新列 email
+ALTER TABLE Player_New ADD COLUMN email TEXT;
 
--- 添加列（SQLite 支持）
-ALTER TABLE players_new ADD COLUMN region TEXT DEFAULT 'CN';
+-- 2.2 修改列名（SQLite 从 3.25 版本开始支持）
+ALTER TABLE Player_New RENAME COLUMN winrate TO win_rate;
 
--- 重命名表
-ALTER TABLE players_new RENAME TO players_old;
+-- 查看修改结果
+PRAGMA table_info(Player_New);
 
--- （部分 SQLite 版本）重命名列
-ALTER TABLE players_old RENAME COLUMN join_date TO registered_at;
+-------------------------------------------------
+-- 3. TRUNCATE（SQLite 没有直接命令，用 DELETE 模拟）
+-------------------------------------------------
+-- 插入测试数据
+INSERT INTO Player_New (player_id, username, rank_id, join_date, win_rate, email)
+VALUES (2, 'LISI', 3, '2024-05-10', 0.65, 'li@example.com');
+
+-- 查看数据
+SELECT * FROM Player_New;
+
+-- 清空数据（保留结构）
+DELETE FROM Player_New;
+
+-- 确认清空
+SELECT * FROM Player_New;
+
+
+-------------------------------------------------
+-- 4. COMMENT - 注释
+-------------------------------------------------
+-- SQLite 不支持 COMMENT 语句，可用 "--" 添加单行注释
+-- 例如：
+-- Player_New 表：存储玩家的基本信息，包括ID、用户名、段位、加入时间、胜率等
+
+-------------------------------------------------
+-- 5. RENAME - 重命名表
+-------------------------------------------------
+ALTER TABLE Player_New RENAME TO Player_Data;
+
+SELECT * FROM sqlite_master;
+
+-- 确认新表名
+SELECT name FROM sqlite_master WHERE type='table';
+
+-------------------------------------------------
+-- 6. DROP - 删除表
+-------------------------------------------------
+DROP TABLE Player_Data; 
+
+-- 确认表已删除
+SELECT name FROM sqlite_master WHERE type='table';
+
+
+SELECT name, tbl_name, sql
+FROM sqlite_master
+WHERE type = 'index';
