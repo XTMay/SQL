@@ -1,0 +1,249 @@
+--Easy (1–10)
+
+-- 1. Get all customers with first name ‘Ashley’.
+
+SELECT * FROM customers WHERE first = 'Ashley';
+
+-- 2. Find all transactions where amount is between 10 and 50.
+
+SELECT * FROM transactions WHERE amt BETWEEN 10 AND 50;
+
+-- 3. List all merchants in the category ‘food_dining’.
+
+SELECT * FROM merchants WHERE category = 'food_dining';
+
+-- 4. Show customers who have no job listed.
+
+SELECT * FROM customers WHERE job IS NULL;
+
+-- 5. Get all fraudulent transactions.
+
+SELECT * FROM transactions WHERE is_fraud = 1;
+
+-- 6. Show last names of all customers in uppercase.
+
+SELECT UPPER(last) AS last_upper FROM customers;
+
+-- 7. Display the first three letters of each customer’s first name.
+
+SELECT SUBSTR(first, 1, 3) AS first_3_letters FROM customers;
+
+-- 8. List all transactions with an amount greater than 100.
+
+SELECT * FROM transactions WHERE amt > 100;
+
+-- 9. Get customers born after 1990-01-01.
+
+SELECT * FROM customers WHERE dob > '1990-01-01';
+
+-- 10. Find all merchants with latitude greater than 40.
+
+SELECT * FROM merchants WHERE merch_lat > 40;
+
+-- Medium (11–20)
+
+-- 11. Find customers who do not live in Columbia, Jones, or Deltona.
+
+SELECT * FROM customers WHERE city NOT IN ('Columbia', 'Jones', 'Deltona');
+
+-- 12. Show transaction amounts and absolute difference from 50.
+
+SELECT amt, ABS(amt - 50) AS amt_diff FROM transactions;
+
+-- 13. Round transaction amounts to the nearest integer.
+
+SELECT ROUND(amt) AS amt_rounded FROM transactions;
+
+-- 14. Convert merchant names to lowercase.
+
+SELECT LOWER(merchant_name) AS merchant_lower FROM merchants;
+
+-- 15. Trim spaces from customer last names.
+
+SELECT TRIM(last) AS last_trimmed FROM customers;
+
+-- 16. Replace spaces with underscores in customer street addresses.
+
+SELECT REPLACE(street, ' ', '_') AS street_underscored FROM customers;
+
+-- 17. Find the length of each customer’s first name.
+
+SELECT LENGTH(first) AS first_length FROM customers;
+
+-- 18. List transactions that happened today.
+
+SELECT * FROM transactions WHERE DATE(trans_date) = DATE('now');
+
+-- 19. Show transactions with amount greater than the square root of 1000.
+
+SELECT * FROM transactions WHERE amt > SQRT(1000);
+
+-- 20. Display first name and last 5 characters of last name.
+
+SELECT first, SUBSTR(last, LENGTH(last) - 4, 5) AS last_5_chars FROM customers;
+
+
+-- Advanced (21–35)
+
+-- 21. Find customers older than 40 years.
+
+SELECT *, STRFTIME('%Y', 'now') - STRFTIME('%Y', dob) AS age
+FROM customers
+WHERE (STRFTIME('%Y', 'now') - STRFTIME('%Y', dob)) > 40;
+
+-- 22. Round merchant longitude to 2 decimal places.
+
+SELECT merchant_name, ROUND(merch_long, 2) AS long_rounded FROM merchants;
+
+-- 23. List transactions with amounts greater than 75% of the maximum amount.
+
+SELECT * FROM transactions
+WHERE amt > (SELECT MAX(amt) * 0.75 FROM transactions);
+
+-- 24. Count the number of transactions per customer.
+
+SELECT cc_num, COUNT(*) AS num_transactions FROM transactions GROUP BY cc_num;
+
+-- 25. Sum transaction amounts per merchant.
+
+SELECT merchant_id, SUM(amt) AS total_amt FROM transactions GROUP BY merchant_id;
+
+-- 26. Show all merchants that have a category assigned.
+
+SELECT * FROM merchants WHERE category IS NOT NULL;
+
+-- 27. List non-fraud transactions with amount > 50.
+
+SELECT * FROM transactions WHERE amt > 50 AND is_fraud = 0;
+
+-- 28. Find customers whose last name contains ‘son’.
+
+SELECT * FROM customers WHERE INSTR(last, 'son') > 0;
+
+-- 29. Show customers living in cities with population above the average.
+
+SELECT * FROM customers
+WHERE city_pop > (SELECT AVG(city_pop) FROM cities);
+
+-- 30. Add 3 hours to transaction date/time.
+
+SELECT cc_num, DATETIME(trans_date, '+3 hours') AS new_trans_date FROM transactions;
+
+-- 31. Find customers with ZIP codes between 10000 and 50000.
+
+SELECT * FROM customers WHERE zip BETWEEN 10000 AND 50000;
+
+-- 32. Show merchants whose names start with ‘fraud’.
+
+SELECT * FROM merchants WHERE SUBSTR(merchant_name, 1, 5) = 'fraud';
+
+-- 33. Find transactions not between 20 and 100.
+
+SELECT * FROM transactions WHERE amt NOT BETWEEN 20 AND 100;
+
+-- 34. Show the day of the week for each transaction.
+
+SELECT trans_num, STRFTIME('%w', trans_date) AS day_of_week FROM transactions;
+
+-- 35. Count customers per state.
+
+SELECT state, COUNT(*) AS num_customers FROM customers GROUP BY state;
+
+-- Expert (36–45)
+
+-- 36. Find customers in the lower half of city populations.
+
+SELECT * FROM customers
+WHERE city_pop < (SELECT city_pop 
+                  FROM cities 
+                  ORDER BY city_pop 
+                  LIMIT 1 OFFSET (SELECT COUNT(*)/2 FROM cities));
+
+-- 37. List transactions above the average amount per merchant.
+
+SELECT t.*
+FROM transactions t
+JOIN (
+    SELECT merchant_id, AVG(amt) AS avg_amt
+    FROM transactions
+    GROUP BY merchant_id
+) m_avg ON t.merchant_id = m_avg.merchant_id
+WHERE t.amt > m_avg.avg_amt;
+
+-- 38. Calculate next birthday for each customer.
+
+SELECT first, last, DATE(dob, '+' || (STRFTIME('%Y', 'now') - STRFTIME('%Y', dob)) || ' years') AS next_birthday
+FROM customers;
+
+-- 39. Find merchants in latitude 30–40 and longitude -90 to -80.
+
+SELECT * FROM merchants
+WHERE merch_lat BETWEEN 30 AND 40 AND merch_long BETWEEN -90 AND -80;
+
+-- 40. Count transactions per merchant category.
+
+SELECT c.category, COUNT(t.trans_num) AS num_transactions
+FROM transactions t
+JOIN merchants m ON t.merchant_id = m.merchant_id
+JOIN categories c ON m.category = c.category
+GROUP BY c.category;
+
+-- 41. Sum transaction amounts per customer in the last 30 days.
+
+SELECT cc_num, SUM(amt) AS total_30days
+FROM transactions
+WHERE trans_date >= DATE('now', '-30 day')
+GROUP BY cc_num;
+
+-- 42. Find the customer with the highest total transactions.
+
+SELECT cc_num, SUM(amt) AS total_amt
+FROM transactions
+GROUP BY cc_num
+ORDER BY total_amt DESC
+LIMIT 1;
+
+-- 43. Find customers with first name Ashley, Jeff, or Brian.
+
+SELECT * FROM customers WHERE first IN ('Ashley', 'Jeff', 'Brian');
+
+-- 44. Find customers whose last name ends with ‘ez’.
+
+SELECT * FROM customers
+WHERE SUBSTR(last, LENGTH(last)-1, 2) = 'ez';
+
+-- 45. Show transactions that occurred during business hours (9am–5pm).
+
+SELECT * FROM transactions
+WHERE CAST(STRFTIME('%H', trans_date) AS INTEGER) BETWEEN 9 AND 17;
+
+-- Challenge (46–50)
+
+-- 46. Calculate average transaction amount per customer.
+
+SELECT cc_num, ROUND(AVG(amt), 2) AS avg_amt FROM transactions GROUP BY cc_num;
+
+-- 47. Count fraudulent transactions per merchant.
+
+SELECT m.merchant_id, m.merchant_name, COUNT(t.trans_num) AS fraud_count
+FROM merchants m
+JOIN transactions t ON m.merchant_id = t.merchant_id
+WHERE t.is_fraud = 1
+GROUP BY m.merchant_id
+ORDER BY fraud_count DESC;
+
+-- 48. Show day of year for each transaction.
+
+SELECT trans_num, STRFTIME('%j', trans_date) AS day_of_year FROM transactions;
+
+-- 49. Calculate age in years for each customer.
+
+SELECT first, last, (JULIANDAY('now') - JULIANDAY(dob))/365 AS age_years FROM customers;
+
+-- 50. Calculate approximate distance between customer and merchant locations.
+
+SELECT t.trans_num, c.first, c.last, m.merchant_name,
+       SQRT(POWER(c.lat - m.merch_lat, 2) + POWER(c.long - m.merch_long, 2)) AS approx_distance
+FROM transactions t
+JOIN customers c ON t.cc_num = c.cc_num
+JOIN merchants m ON t.merchant_id = m.merchant_id;
