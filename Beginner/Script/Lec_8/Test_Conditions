@@ -1,0 +1,123 @@
+-- Q1. Select all customers whose first name is "Ashley".
+
+SELECT * 
+FROM customers
+WHERE first = 'Ashley';
+
+-- Q2. Retrieve all transactions greater than 50.
+
+SELECT * 
+FROM transactions
+WHERE amt > 50;
+
+-- Q3. Find all merchants where category is "food_dining".
+
+SELECT merchant_id, merchant_name 
+FROM merchants
+WHERE category = 'food_dining';
+
+-- Q4. Select all cities with population less than 1000.
+
+SELECT city, city_pop 
+FROM cities
+WHERE city_pop < 1000;
+
+-- Q5. Show customers born before 1970.
+
+SELECT first, last, dob 
+FROM customers
+WHERE dob < '1970-01-01';
+
+
+-- Q6. Find all transactions between $10 and $30.
+
+SELECT * 
+FROM transactions
+WHERE amt BETWEEN 10 AND 30;
+
+-- Q7. Show all customers whose job contains "engineer".
+
+SELECT first, last, job 
+FROM customers
+WHERE job LIKE '%engineer%';
+
+-- Q8. Display transactions that happened on June 21, 2020 only.
+
+SELECT trans_num, trans_date, amt
+FROM transactions
+WHERE DATE(trans_date) = '2020-06-21';
+
+-- Q9. Select merchants whose names start with "fraud_H".
+
+SELECT merchant_id, merchant_name 
+FROM merchants
+WHERE merchant_name LIKE 'fraud_H%';
+
+-- Q10. Find all cities in Florida (FL) with population greater than 50,000.
+
+SELECT city, city_pop 
+FROM cities
+WHERE state_code = 'FL'
+  AND city_pop > 50000;
+
+-- Q11. Get all customers whose last name ends with "son".
+
+SELECT first, last 
+FROM customers
+WHERE last LIKE '%son';
+
+-- Q12. Show all merchants with "LLC" in their name.
+
+SELECT merchant_name 
+FROM merchants
+WHERE merchant_name LIKE '%LLC%';
+
+-- Q13. Retrieve transactions where amount has cents = .93.
+
+SELECT trans_num, amt
+FROM transactions
+WHERE amt LIKE '%.93';
+
+-- Q14. Find customers older than 50 years (based on DOB).
+
+SELECT first, last, dob
+FROM customers
+WHERE dob <= DATE('1975-08-20');  -- assuming today=2025-08-20
+
+-- Q15. Show customers living in cities with population between 1,000 and 10,000.
+
+SELECT first, last, city, city_pop
+FROM customers
+WHERE city_pop BETWEEN 1000 AND 10000;
+
+
+-- Q16. Retrieve all customers with NULL in their street (if any).
+
+SELECT first, last, street 
+FROM customers
+WHERE street IS NULL;
+
+-- Q17. Show transactions where unix_time is odd number.
+
+SELECT trans_num, unix_time 
+FROM transactions
+WHERE unix_time % 2 = 1;
+
+-- Q18. Get customers where first name has exactly 6 characters.
+
+SELECT first, last
+FROM customers
+WHERE LENGTH(first) = 6;
+
+-- Q19. Find all transactions that happened in the afternoon (12:00 - 17:59).
+
+SELECT trans_num, trans_date, amt
+FROM transactions
+WHERE CAST(STRFTIME('%H', trans_date) AS INTEGER) 
+      BETWEEN 12 AND 17;
+
+-- Q20. Select customers whose ZIP code starts with 32.
+
+SELECT first, last, zip 
+FROM customers
+WHERE CAST(zip AS TEXT) LIKE '32%';

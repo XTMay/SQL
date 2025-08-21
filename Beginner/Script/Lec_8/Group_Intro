@@ -1,0 +1,25 @@
+SELECT * FROM customers;
+
+SELECT * FROM transactions;
+
+/* COUNT(*) 
+ SUM(score) 
+ AVG(score) 
+ MAX(score) / MIN(score) 
+ GROUP_CONCAT(column)*/ 
+ 
+
+-- 41. Sum transaction amounts per customer in the last 30 days.
+
+SELECT cc_num, SUM(amt) AS total_30days
+FROM transactions
+WHERE trans_date >= DATE('now', '-30 day')
+GROUP BY cc_num;
+
+-- 42. Find the customer with the highest total transactions.
+
+SELECT cc_num, SUM(amt) AS total_amt
+FROM transactions
+GROUP BY cc_num
+ORDER BY total_amt DESC
+LIMIT 1;
