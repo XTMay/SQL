@@ -1,0 +1,143 @@
+/*
+(1) 创建视图
+-- 创建简单视图：只展示用户名和邮箱
+CREATE VIEW user_contact AS
+SELECT username, email
+FROM users;
+(2) 使用视图
+SELECT * FROM user_contact;
+(3) 修改视图
+-- 方式一：先删除再创建
+DROP VIEW user_contact;
+CREATE VIEW user_contact AS
+SELECT username, email, phone
+FROM users;
+-- 方式二（部分数据库支持）：直接替换
+CREATE OR REPLACE VIEW user_contact AS
+SELECT username, email, phone
+FROM users;
+(4) 删除视图
+DROP VIEW user_contact;
+*/
+
+SELECT * FROM players;
+SELECT * FROM rank;
+SELECT * FROM friends;
+SELECT * FROM heroes;
+SELECT * FROM matches;
+SELECT * FROM items;
+
+-- 玩家基本信息视图（简化查询）
+-- 只展示玩家的基本信息和段位名称，不暴露 rank_id 这种内部字段。
+CREATE VIEW player_info AS
+SELECT 
+    p.player_id,
+    p.username,
+    r.rank_name,
+    p.join_date,
+    p.winrate
+FROM players p
+JOIN rank r ON p.rank_id = r.rank_id;
+
+SELECT * FROM player_info;
+DROP VIEW player_info;
+
+-- 好友关系列表视图
+-- 展示每个玩家的好友用户名（而不是 ID）。
+
+CREATE VIEW friend_list AS
+SELECT 
+    p.username AS player,
+    f.username AS friend
+FROM friends fr
+JOIN players p ON fr.player_id = p.player_id
+JOIN players f ON fr.friend_id = f.player_id;
+
+SELECT * FROM friend_list;
+DROP VIEW friend_list;
+
+-- 玩家历史对局视图
+-- 展示玩家的用户名、所用英雄、比赛结果、KDA 等数据，便于查询对局情况。
+CREATE VIEW match_history AS
+SELECT 
+    p.username,
+    h.hero_name,
+    m.result,
+    m.kills,
+    m.deaths,
+    m.assists,
+    m.gold,
+    m.damage_output,
+    m.damage_input,
+    m.match_date
+FROM matches m
+JOIN players p ON m.player_id = p.player_id
+JOIN heroes h ON m.hero_id = h.hero_id;
+
+SELECT * FROM match_history;
+DROP VIEW match_history;
+
+-- 玩家胜率排行榜视图
+-- 展示按胜率从高到低排序的玩家信息。
+CREATE VIEW winrate_ranking AS
+SELECT 
+    username,
+    winrate,
+    rank_name
+FROM players p
+JOIN rank r ON p.rank_id = r.rank_id
+ORDER BY winrate DESC;
+
+SELECT * FROM winrate_ranking;
+DROP VIEW winrate_ranking;
+
+-- 英雄使用统计视图
+-- 统计每个英雄的出场次数与平均击杀。
+CREATE VIEW hero_statistics AS
+SELECT 
+    h.hero_name,
+    COUNT(m.match_id) AS total_matches,
+    AVG(m.kills) AS avg_kills,
+    AVG(m.assists) AS avg_assists,
+    AVG(m.deaths) AS avg_deaths
+FROM matches m
+JOIN heroes h ON m.hero_id = h.hero_id
+GROUP BY h.hero_name;
+
+SELECT * FROM hero_statistics;
+DROP VIEW hero_statistics;
+
+-- 玩家物品使用视图
+-- 展示玩家在比赛中最常用的装备。
+
+CREATE VIEW item_usage AS
+SELECT 
+    p.username,
+    i.item_name,
+    COUNT(m.match_id) AS usage_count
+FROM matches m
+JOIN players p ON m.player_id = p.player_id
+JOIN items i ON m.item_id = i.item_id
+GROUP BY p.username, i.item_name
+ORDER BY usage_count DESC;
+
+SELECT * FROM item_usage;
+DROP VIEW item_usage;
+
+-- 高价值对局视图（安全型）
+-- 只展示部分比赛信息，隐藏玩家 ID 等内部字段，便于对外发布。
+CREATE VIEW public_match_summary AS
+SELECT 
+    p.username,
+    h.hero_name,
+    m.result,
+    m.kills,
+    m.assists,
+    m.gold,
+    m.participation_rate
+FROM matches m
+JOIN players p ON m.player_id = p.player_id
+JOIN heroes h ON m.hero_id = h.hero_id;
+
+SELECT * FROM public_match_summary;
+DROP VIEW public_match_summary;

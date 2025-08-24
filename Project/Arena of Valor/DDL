@@ -1,0 +1,73 @@
+CREATE TABLE players (
+    player_id INTEGER PRIMARY KEY,
+    username  TEXT,
+    rank_id   TEXT    REFERENCES rank (rank_id),
+    join_date TEXT,
+    winrate   REAL
+);
+
+CREATE TABLE friends (
+    player_id INTEGER,
+    friend_id INTEGER,
+    PRIMARY KEY (
+        player_id,
+        friend_id
+    ),
+    FOREIGN KEY (
+        player_id
+    )
+    REFERENCES players (player_id),
+    FOREIGN KEY (
+        friend_id
+    )
+    REFERENCES players (player_id) 
+);
+
+CREATE TABLE heroes (
+    hero_id   INTEGER PRIMARY KEY,
+    hero_name TEXT,
+    role      TEXT
+);
+
+CREATE TABLE items (
+    item_id       INTEGER PRIMARY KEY,
+    item_name     TEXT,
+    item_category TEXT
+);
+
+CREATE TABLE rank (
+    rank_id    INTEGER PRIMARY KEY AUTOINCREMENT,
+    rank_name  TEXT    NOT NULL
+                       UNIQUE,
+    rank_order INTEGER NOT NULL
+);
+
+CREATE TABLE matches (
+    match_id           INTEGER PRIMARY KEY,
+    player_id          INTEGER,
+    hero_id            INTEGER,
+    result             TEXT,
+    kills              INTEGER,
+    deaths             INTEGER,
+    assists            INTEGER,
+    match_date         TEXT,
+    item_id            INTEGER,
+    master_skill       TEXT,
+    gold               INTEGER,
+    damage_output      INTEGER,
+    damage_input       INTEGER,
+    participation_rate REAL,
+    FOREIGN KEY (
+        player_id
+    )
+    REFERENCES players (player_id),
+    FOREIGN KEY (
+        hero_id
+    )
+    REFERENCES heroes (hero_id),
+    FOREIGN KEY (
+        item_id
+    )
+    REFERENCES items (item_id) 
+);
+

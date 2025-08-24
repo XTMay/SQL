@@ -1,0 +1,50 @@
+--(1) 子查询在 WHERE 中	
+-- 查询胜率高于平均胜率的玩家：
+	SELECT username, winrate
+	FROM players
+	WHERE winrate > (
+	    SELECT AVG(winrate) FROM players
+	);
+	
+-- (2) 子查询在 FROM 中（派生表）	
+-- 统计每个段位的平均胜率，再筛选出高于 55% 的段位：
+	SELECT rank_name, avg_winrate
+	FROM (
+	    SELECT r.rank_name, AVG(p.winrate) AS avg_winrate
+	    FROM players p
+	    JOIN rank r ON p.rank_id = r.rank_id
+	    GROUP BY r.rank_name
+	) AS rank_stats
+	WHERE avg_winrate > 0.55;
+	
+	
+-- (3) 子查询在 SELECT 中	
+-- 查询每个玩家的比赛场次（在 SELECT 中嵌套统计）：
+	SELECT 
+	    username,
+	    (SELECT COUNT(*) FROM matches m WHERE m.player_id = p.player_id) AS match_count
+	FROM players p;
+	
+	
+-- (4) 相关子查询（Correlated Subquery）	
+-- 找出每个玩家最近的一场比赛：
+	SELECT username, match_id, match_date
+	FROM matches m1
+	JOIN players p ON m1.player_id = p.player_id
+	WHERE match_date = (
+	    SELECT MAX(m2.match_date)
+	    FROM matches m2
+	    WHERE m2.player_id = m1.player_id
+	);
+	
+	
+-- 4. 高级应用案例	
+-- 案例：找出每个段位胜率最高的玩家
+	SELECT username, rank_name, winrate
+	FROM players p
+	JOIN rank r ON p.rank_id = r.rank_id
+	WHERE winrate = (
+	    SELECT MAX(p2.winrate)
+	    FROM players p2
+	    WHERE p2.rank_id = p.rank_id
+	);
