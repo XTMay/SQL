@@ -1,0 +1,195 @@
+-- Q1: Count number of customers in each state
+-- 统计每个州的顾客数量
+SELECT state, COUNT(*) AS customer_count
+FROM customers
+GROUP BY state;
+
+-- Q2: Find the number of transactions per merchant
+-- 查询每个商家的交易数量
+SELECT m.merchant_name, COUNT(*)
+FROM merchants AS m
+JOIN transactions AS t
+ON m.merchant_id = t.merchant_id
+GROUP BY m.merchant_id;
+
+SELECT *
+FROM transactions;
+
+
+
+SELECT m.merchant_name, COUNT(t.trans_num) AS transaction_count
+FROM merchants m
+JOIN transactions t ON m.merchant_id = t.merchant_id
+GROUP BY m.merchant_name;
+
+-- Q3: Find total transaction amount per customer
+-- 查询每位顾客的交易总金额
+SELECT c.first || ' ' || c.last AS customer_name, SUM(t.amt) AS total_spent
+FROM customers c
+JOIN transactions t ON c.cc_num = t.cc_num
+GROUP BY c.cc_num
+ORDER BY total_spent DESC;
+
+-- Q4: Find average transaction amount per state
+-- 查询每个州的平均交易金额
+
+SELECT *
+FROM transactions;
+
+SELECT *
+FROM merchants;
+
+SELECT *
+FROM customers;
+
+SELECT *
+FROM cities;
+
+
+SELECT s.state_name, AVG(t.amt) AS avg_transaction
+FROM states AS s
+JOIN customers AS c ON s.state_code = c.state
+JOIN transactions AS t ON c.cc_num = t.cc_num
+GROUP BY s.state_name;
+
+-- Q5: Find the top 3 merchants by transaction volume (total amount)
+-- 查询交易总金额排名前三的商家
+SELECT m.merchant_name, SUM(t.amt) AS total_volume
+FROM merchants m
+JOIN transactions t ON m.merchant_id = t.merchant_id
+GROUP BY m.merchant_name
+ORDER BY total_volume DESC
+LIMIT 3;
+
+-- Q6: Find states where total fraudulent transaction amount exceeds 10,000
+-- 查询总欺诈交易金额超过 10,000 的州
+SELECT s.state_name, SUM(t.amt) AS fraud_amount
+FROM transactions t
+JOIN customers c ON t.cc_num = c.cc_num
+JOIN states s ON c.state = s.state_code
+WHERE t.is_fraud = 1
+GROUP BY s.state_name
+HAVING SUM(t.amt) > 10000;
+
+-- Q7: Compare average transaction amounts between male and female customers
+-- 比较男性与女性顾客的平均交易金额
+SELECT c.gender, AVG(t.amt) AS avg_transaction
+FROM customers c
+JOIN transactions t ON c.cc_num = t.cc_num
+GROUP BY c.gender;
+
+-- Q8: Find the most popular merchant category in each state (by number of transactions)
+-- 查询每个州中最受欢迎的商家类别（按交易数量计算）
+SELECT s.state_name, m.category, COUNT(*) AS transaction_count
+FROM transactions t
+JOIN customers c ON t.cc_num = c.cc_num
+JOIN merchants m ON t.merchant_id = m.merchant_id
+JOIN states s ON c.state = s.state_code
+GROUP BY s.state_name, m.category
+HAVING COUNT(*) = (
+    SELECT MAX(cnt)
+    FROM (
+        SELECT COUNT(*) AS cnt
+        FROM transactions t2
+        JOIN customers c2 ON t2.cc_num = c2.cc_num
+        JOIN merchants m2 ON t2.merchant_id = m2.merchant_id
+        WHERE c2.state = c.state
+        GROUP BY m2.category
+    )
+);
+
+-- Q1: Find the number of merchants in each category
+-- 查询每个商家类别下的商家数量
+SELECT category, COUNT(*)
+FROM merchants
+GROUP BY category
+HAVING COUNT(*) >= 5;
+
+
+
+
+
+
+
+SELECT category, COUNT(*) AS merchant_count
+FROM merchants
+GROUP BY category;
+
+-- Q2: Find the total transaction amount for each merchant category
+-- 查询每个商家类别的交易总金额
+SELECT m.category, SUM(t.amt) AS total_amount
+FROM merchants m
+JOIN transactions t ON m.merchant_id = t.merchant_id
+GROUP BY m.category;
+
+-- Q3: Find the number of customers in each city
+-- 查询每个城市的顾客数量
+SELECT city, COUNT(*) AS customer_count
+FROM customers
+GROUP BY city;
+
+-- Q4: Find the average age of customers in each state
+-- 查询每个州顾客的平均年龄
+SELECT state, AVG((julianday('now') - julianday(dob)) / 365) AS avg_age
+FROM customers
+GROUP BY state;
+
+-- Q5: Find the top 5 states by total number of transactions
+-- 查询交易数量排名前五的州
+SELECT c.state, COUNT(t.trans_num) AS transaction_count
+FROM customers c
+JOIN transactions t ON c.cc_num = t.cc_num
+GROUP BY c.state
+ORDER BY transaction_count DESC
+LIMIT 5;
+
+-- Q6: Find the number of distinct customers who purchased from each merchant
+-- 查询每个商家拥有的不同顾客数量
+SELECT m.merchant_name, COUNT(DISTINCT t.cc_num) AS unique_customers
+FROM merchants m
+JOIN transactions t ON m.merchant_id = t.merchant_id
+GROUP BY m.merchant_name;
+
+-- Q7: Find the state with the highest total fraud transaction amount
+-- 查询总欺诈交易金额最高的州
+SELECT s.state_name, SUM(t.amt) AS fraud_amount
+FROM transactions t
+JOIN customers c ON t.cc_num = c.cc_num
+JOIN states s ON c.state = s.state_code
+WHERE t.is_fraud = 1
+GROUP BY s.state_name
+ORDER BY fraud_amount DESC
+LIMIT 1;
+
+-- Q8: Find merchants whose average transaction amount is greater than 500
+-- 查询平均交易金额大于 500 的商家
+SELECT m.merchant_name, AVG(t.amt) AS avg_amount
+FROM merchants m
+JOIN transactions t ON m.merchant_id = t.merchant_id
+GROUP BY m.merchant_name
+HAVING AVG(t.amt) > 500;
+
+-- Q9: Find the most popular merchant (by transaction count) in each category
+-- 查询每个商家类别中最受欢迎的商家（按交易数量计算）
+SELECT m.category, m.merchant_name, COUNT(t.trans_num) AS trans_count
+FROM merchants m
+JOIN transactions t ON m.merchant_id = t.merchant_id
+GROUP BY m.category, m.merchant_name
+HAVING COUNT(t.trans_num) = (
+    SELECT MAX(cnt)
+    FROM (
+        SELECT COUNT(t2.trans_num) AS cnt
+        FROM merchants m2
+        JOIN transactions t2 ON m2.merchant_id = t2.merchant_id
+        WHERE m2.category = m.category
+        GROUP BY m2.merchant_name
+    )
+);
+
+-- Q10: Find the month with the highest total transaction amount across all merchants
+-- 查询所有商家中交易总金额最高的月份
+SELECT strftime('%Y-%m', t.trans_date) AS month, SUM(t.amt) AS total_amount
+FROM transactions t
+GROUP BY month
+ORDER BY total_amount DESC
+LIMIT 1;
