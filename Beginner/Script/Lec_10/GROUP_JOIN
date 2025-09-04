@@ -1,0 +1,88 @@
+SELECT *
+FROM transactions;
+
+-- 1. 按交易类别统计交易数量
+-- Count the number of transactions by category
+SELECT c.category, COUNT(t.trans_num) AS total_transactions
+FROM transactions t
+JOIN merchants m ON t.merchant_id = m.merchant_id
+JOIN categories c ON m.category = c.category
+GROUP BY c.category;
+
+-- 2. 各州的客户数量
+-- Count the number of customers in each state
+SELECT s.state_name, COUNT(cu.cc_num) AS customer_count
+FROM customers cu
+JOIN states s ON cu.state = s.state_code
+GROUP BY s.state_name
+ORDER BY customer_count DESC;
+
+-- 3. 各城市平均交易金额
+-- Calculate the average transaction amount by city
+SELECT ci.city, ROUND(AVG(t.amt), 2) AS avg_amount
+FROM transactions t
+JOIN customers cu ON t.cc_num = cu.cc_num
+JOIN cities ci ON cu.city = ci.city
+GROUP BY ci.city
+ORDER BY avg_amount DESC;
+
+-- 4. 各类商户的总交易金额
+-- Calculate the total transaction amount by merchant category
+SELECT m.category, SUM(t.amt) AS total_amount
+FROM transactions t
+JOIN merchants m ON t.merchant_id = m.merchant_id
+GROUP BY m.category
+ORDER BY total_amount DESC;
+
+-- 5. 按州统计欺诈交易数量
+-- Count the number of fraudulent transactions by state
+SELECT s.state_name, COUNT(*) AS fraud_count
+FROM transactions t
+JOIN customers cu ON t.cc_num = cu.cc_num
+JOIN states s ON cu.state = s.state_code
+WHERE t.is_fraud = TRUE
+GROUP BY s.state_name;
+
+-- 6. 每个客户的总消费金额
+-- Calculate the total spending amount for each customer
+SELECT cu.first, cu.last, SUM(t.amt) AS total_spent
+FROM customers cu
+JOIN transactions t ON cu.cc_num = t.cc_num
+GROUP BY cu.first, cu.last
+ORDER BY total_spent DESC;
+
+-- 7. 各州平均单笔消费金额
+-- Calculate the average transaction amount by state
+SELECT s.state_name, ROUND(AVG(t.amt), 2) AS avg_transaction
+FROM transactions t
+JOIN customers cu ON t.cc_num = cu.cc_num
+JOIN states s ON cu.state = s.state_code
+GROUP BY s.state_name
+ORDER BY avg_transaction DESC;
+
+-- 8. 每个商户的交易次数
+-- Count the number of transactions per merchant
+SELECT m.merchant_name, COUNT(t.trans_num) AS transaction_count
+FROM merchants m
+JOIN transactions t ON m.merchant_id = t.merchant_id
+GROUP BY m.merchant_name
+ORDER BY transaction_count DESC;
+
+-- 9. 各个类别的客户数（有交易记录的）
+-- Count the number of distinct customers per category (with transactions)
+SELECT c.category, COUNT(DISTINCT cu.cc_num) AS customer_count
+FROM transactions t
+JOIN merchants m ON t.merchant_id = m.merchant_id
+JOIN categories c ON m.category = c.category
+JOIN customers cu ON t.cc_num = cu.cc_num
+GROUP BY c.category;
+
+-- 10. 各州消费总额 Top 5
+-- Top 5 states by total spending amount
+SELECT s.state_name, SUM(t.amt) AS total_amount
+FROM transactions t
+JOIN customers cu ON t.cc_num = cu.cc_num
+JOIN states s ON cu.state = s.state_code
+GROUP BY s.state_name
+ORDER BY total_amount DESC
+LIMIT 5;
