@@ -1,0 +1,1283 @@
+SELECT * FROM students
+WHERE NULL NOT IN ('男', '女'); -- T/F
+
+/*INSERT INTO courses (course_name, credit, schedule_time, teacher_id, department_id, is_mandatory) VALUES
+('Python编程基础', 3.0, '10:00', 1, 1, 1),*/
+SELECT * FROM departments;
+/*INSERT INTO departments (department_name, description) VALUES
+('计算机系', '主要课程包括编程、AI、数据库等'),*/
+SELECT * FROM enrollments;
+/*INSERT INTO enrollments (student_id, course_id, score, is_passed) VALUES
+(1, 1, 85.5, 1)*/
+SELECT * FROM students;
+/*INSERT INTO students (name, age, gender, birth_date, enrolled_date, gpa, department_id) VALUES
+('小明', 20, '男', '2003-04-12', '2021-09-01', 3.5, 1),*/
+SELECT * FROM teachers;
+/*INSERT INTO teachers (name, hire_date, salary, title) VALUES
+('张三', '2015-09-01', 8500.00, '副教授'),*/
+
+
+/*范围判断	BETWEEN x AND y	score BETWEEN 80 AND 90	判断值是否在 x 到 y 之间（包含边界） score <= 90 AND score >= 80
+	NOT BETWEEN x AND y	age NOT BETWEEN 10 AND 18	判断值不在 x 到 y 范围内
+集合判断	IN (v1, v2, v3)	department_id IN (1, 2, 3)	判断值是否出现在给定集合中
+	NOT IN (v1, v2, v3)	gender NOT IN ('M', 'Other')	判断值不在集合中
+ 'F' 'M', 'Other', gender IN ('F'), gender == 'F', string/text
+空值判断	IS NULL	score IS NULL	判断字段值是否为 NULL
+	IS NOT NULL	name IS NOT NULL	判断字段值不为 NULL
+布尔逻辑	NOT 条件	NOT age > 20	逻辑取反，条件不成立时为真
+条件分支	CASE WHEN ... THEN ... END	CASE WHEN score >= 100 THEN 'HIGH' ELSE 'LOW' END	条件判断分类输出
+空值处理	IFNULL(x, default)	IFNULL(NULL, 0) → 0	如果为 NULL，则替换为默认值
+	NULLIF(x, y)	NULLIF(5, 5) → NULL	若 x=y，返回 NULL，否则返回 x
+	COALESCE(x1, x2, ..., xn)	COALESCE(NULL, NULL, 'A') → 'A'	返回第一个非 NULL 的值*/
+ 
+-- NOT 条件
+-- 查询所有年龄不大于22岁的学生
+SELECT *
+FROM students
+WHERE NOT (age > 22);
+
+-- 查询所有GPA不大于3.3的学生
+SELECT *
+FROM students
+WHERE NOT gpa > 3.3;
+
+
+-- BETWEEN x AND y	
+-- e.g.: score BETWEEN 80 AND 90
+-- 查询薪资在 8000 到 10000 之间的教师姓名和薪资
+SELECT name, salary
+FROM teachers
+WHERE salary BETWEEN 8000 AND 10000;
+
+-- 查找 GPA 在 3.0 到 4.0 之间的学生
+SELECT *
+FROM students
+WHERE gpa BETWEEN 3.0 AND 4.0;
+
+-- 查询入学日期在 2020 年到 2022 年之间的学生
+SELECT ?
+FROM ?
+WHERE ?;
+
+
+-- NOT (BETWEEN x AND y	age)
+-- e.g.: NOT BETWEEN 10 AND 18
+-- 查找成绩不在 60 到 80 分之间的选课记录
+SELECT ?
+FROM ?
+WHERE ?;
+
+
+-- 找出出生日期不在 2000 到 2003 年之间的学生
+SELECT ?
+FROM ?
+WHERE ?;
+
+-- IN (v1, v2, v3)
+-- IN (x, y, z, a, v, b, c, d) 等价于 = x OR = y OR = z	
+-- e.g.: department_id IN (1, 2, 3)
+-- 查询属于“计算机系 (1)”和“数学系 (3)”的学生
+SELECT *
+FROM students
+WHERE department_id IN (1, 3);
+
+-- 查找特定教师教授的课程（teacher_id 为 1、3、5）
+SELECT ?
+FROM ?
+WHERE ?;
+
+-- NOT IN (v1, v2, v3)	 
+-- NOT IN (x, y, z) 等价于 != x AND != y AND != z
+-- e.g.: gender NOT IN ('Male', 'Other')
+-- 查询不在“外语系 (2)”和“心理学系 (5)”的课程
+SELECT ?
+FROM ?
+WHERE ?;
+
+
+-- IS NULL	
+--  e.g.: score IS NULL
+-- 查询 GPA 缺失的学生
+SELECT ?
+FROM ?
+WHERE ?;
+
+-- 查询未安排时间的课程
+SELECT ?
+FROM ?
+WHERE ?;
+
+-- 查询成绩未录入的选课记录
+SELECT ?
+FROM ?
+WHERE ?;
+
+-- IS NOT NULL	
+-- e.g.: name IS NOT NULL
+-- 查询所有工资不为 NULL 的教师
+SELECT ?
+FROM ?
+WHERE ?;
+
+-- 查询 有GPA 的学生
+SELECT ?
+FROM ?
+WHERE ?;
+
+
+
+-- 查询生日不为NULL且年龄在21岁到23岁之间的所有女生的姓名，年龄和生日
+
+
+-- 查询来自部门1的GPA不小于3.2的或GPA为NULL的学生信息
+
+
+-- 🔢 数学函数
+-- ROUND(x) 	
+-- e.g.: ROUND(88.678) → 89 	 四舍五入
+SELECT gpa, ROUND(gpa)
+FROM students;
+
+-- ABS(x) 	 
+-- e.g.: ABS(-10) → 10 	 绝对值
+
+-- CEIL(x) / FLOOR(x)
+-- e.g.: CEIL(3.4) → 4 / FLOOR(3.4) → 3 	 向上 / 向下取整
+
+SELECT gpa, CEIL(gpa), FLOOR(gpa)
+FROM students;
+
+-- POWER(x, y) 	 
+-- e.g.: POWER(2, 3) → 8 	 x 的 y 次幂
+SELECT POWER(2, 3)
+FROM students;
+
+-- SQRT(x) 	 
+-- e.g.: SQRT(9) → 3 	 平方根
+
+SELECT SQRT(9)
+FROM students;
+
+-- RANDOM() 	 
+-- e.g.: RANDOM() → 随机整数 	 生成随机值
+
+SELECT RANDOM()
+FROM students;
+
+-- 🔠 字符串函数 	 
+
+-- LENGTH(s) 	 
+-- e.g.: LENGTH('SQL') → 3 	 字符串长度
+
+SELECT LENGTH('SQL')
+FROM students;
+
+-- UPPER(s) / LOWER(s) 	 
+-- e.g.: UPPER('sql') → 'SQL' 	 转换为大写 / 小写
+SELECT UPPER('sql')
+FROM students;
+
+-- SUBSTR(s, start, len) 	 
+-- e.g.: SUBSTR('SQL语言', 1, 3) → 'SQL' 	 截取子串
+SELECT SUBSTR('SQL语言', 1, 3)
+FROM students;
+
+-- TRIM(s) / LTRIM() / RTRIM() 	 
+-- e.g.: TRIM(' abc ') → 'abc' 	 去除空格/前导/尾部字符
+SELECT TRIM(' abc ')
+FROM students;
+
+-- REPLACE(s, old, new) 	 
+-- e.g.: REPLACE('apple', 'a', 'A') → 'Apple' 	 替换子串
+SELECT REPLACE('apple', 'a', 'A')
+FROM students;
+
+-- INSTR(s, substr) 	 
+-- e.g.: INSTR('hello', 'e') → 2 	 查找子串位置*/
+SELECT INSTR('hello', 'e')
+FROM students;
+
+SELECT * FROM courses;
+/*INSERT INTO courses (course_name, credit, schedule_time, teacher_id, department_id, is_mandatory) VALUES
+('Python编程基础', 3.0, '10:00', 1, 1, 1),*/
+SELECT * FROM departments;
+/*INSERT INTO departments (department_name, description) VALUES
+('计算机系', '主要课程包括编程、AI、数据库等'),*/
+SELECT * FROM enrollments;
+/*INSERT INTO enrollments (student_id, course_id, score, is_passed) VALUES
+(1, 1, 85.5, 1)*/
+SELECT * FROM students;
+/*INSERT INTO students (name, age, gender, birth_date, enrolled_date, gpa, department_id) VALUES
+('小明', 20, '男', '2003-04-12', '2021-09-01', 3.5, 1),*/
+SELECT * FROM teachers;
+/*INSERT INTO teachers (name, hire_date, salary, title) VALUES
+('张三', '2015-09-01', 8500.00, '副教授'),*/
+
+
+-- NOT 条件
+-- 查询所有年龄不大于22岁的学生
+SELECT *
+FROM students
+WHERE NOT (age > 22);
+
+
+-- BETWEEN x AND y	
+-- e.g.: score BETWEEN 80 AND 90
+-- 查询薪资在 8000 到 10000 之间的教师姓名和薪资
+SELECT name, salary
+FROM teachers
+WHERE (salary BETWEEN 8000 AND 10000);
+
+
+-- NOT IN (v1, v2, v3)	 
+-- NOT IN (x, y, z) 等价于 != x AND != y AND != z
+-- e.g.: gender NOT IN ('Male', 'Other')
+-- 查询不在“外语系 (2)”和“心理学系 (5)”的课程
+
+-- 🔢 数学函数
+-- ROUND(x) 	
+-- e.g.: ROUND(88.678) → 89 	 四舍五入
+SELECT gpa, ROUND(gpa)
+FROM students;
+
+-- ABS(x) 	 
+-- e.g.: ABS(-10) → 10 	 绝对值
+SELECT ABS(-1.2)
+FROM students;
+
+-- CEIL(x) / FLOOR(x)
+-- e.g.: CEIL(3.4) → 4 / FLOOR(3.4) → 3 	 向上 / 向下取整
+SELECT 'abc', CEIL(3.00001), FLOOR(3.00001)
+FROM teachers;
+
+-- POWER(x, y) 	 
+-- e.g.: POWER(2, 3) → 8 	 x 的 y 次幂
+SELECT POWER(3, 2)
+FROM students;
+
+-- SQRT(x) 	 
+-- e.g.: SQRT(9) → 3 	 平方根
+SELECT SQRT(16)
+FROM students;
+
+-- RANDOM() 	 
+-- e.g.: RANDOM() → 随机整数 	 生成随机值
+SELECT RANDOM()
+FROM students;
+
+-- 🔠 字符串函数 	 
+
+-- LENGTH(s) 	 
+-- e.g.: LENGTH('SQL') → 3 	 字符串长度
+
+SELECT LENGTH('文bbもじaaおう')
+FROM students;
+
+-- UPPER(s) / LOWER(s) 	 
+-- e.g.: UPPER('sql') → 'SQL' 	 转换为大写 / 小写
+SELECT LOWER('SqlA') -- sqla
+FROM students;
+
+-- SUBSTR(s, start, len) -- s: target text	start: strat index, len: substring length
+-- e.g.: SUBSTR('SQL语言', 1, 3) → 'SQL' 	 截取子串
+SELECT SUBSTR('SQL语言SQL语言', 4, 2)
+FROM students;
+
+-- TRIM(s) / LTRIM() / RTRIM() 	 
+-- e.g.: TRIM(' abc ') → 'abc' 	 去除空格/前导/尾部字符
+SELECT RTRIM(' abc ')
+FROM students;
+
+
+-- REPLACE(s, old, new) 	 
+-- e.g.: REPLACE('apple', 'a', 'A') → 'Apple' 	 替换子串
+SELECT REPLACE('apple', 'p', 'P')
+FROM students;
+
+-- IN(INdex)STR(string)(s, substr) 	 
+-- e.g.: INSTR('hello', 'e') → 2 	 查找子串位置*/
+SELECT INSTR('查找子hello串位置', '子')
+FROM students;
+
+SELECT * 
+FROM students;
+
+-- 查找年龄在 20 到 25 岁之间，且是女性的学生
+SELECT * 
+FROM students
+WHERE ?;
+
+-- 查找年龄大于 22 岁，或者性别是男性的学生
+SELECT * 
+FROM students
+WHERE ?;
+
+-- 查找名字以字母 ‘A’ 开头，或者年龄小于 20 且是男性的学生
+SELECT * 
+FROM students
+WHERE ?;
+
+-- 查找没有部门或年龄小于 21 的学生
+SELECT * 
+FROM students
+WHERE ?;
+
+-- 查找名字不为空，且性别是 女 或者年龄超过 25 的学生
+SELECT * 
+FROM students
+WHERE ?;
+
+-- 找出名字以 ‘A’ 开头的学生，并显示小写版本
+SELECT name, ?
+FROM students
+WHERE ?;
+
+-- 查找名字中是否包含 ‘li’ 子字符串的位置
+SELECT name, ? 
+FROM students 
+WHERE ?;
+
+-- 将名字中的 ‘a’ 替换成 ‘A’
+SELECT name, ?
+FROM students 
+WHERE ?;
+
+-- 去除名学生字前后的空格并截取学生名字的前3个字符
+SELECT name, ?
+FROM students 
+WHERE ?;
+
+-- 找出名字长度为偶数，且性别为  女 的学生
+SELECT * 
+FROM students
+WHERE ?;
+
+-- 找出名字前3个字母为 ‘Ali’ 或 ‘Bob’ 的学生
+SELECT * 
+FROM students
+WHERE ;
+
+-- 查找学生中年龄大于等于 21，且年龄的平方根大于 4
+SELECT * FROM students
+WHERE ?;
+
+SELECT * 
+FROM courses;
+-- 找出课程有指定老师且有指定系别的（过滤掉有 NULL 的课程）
+SELECT * 
+FROM courses
+WHERE  ?;
+
+--
+
+
+
+
+
+-- 学生部门ID = 3 的学生信息
+SELECT *
+FROM students
+WHERE department_id = 3;
+
+
+
+-- 学生年龄 > 21 和 部门ID = 3 的学生信息 （AND）
+SELECT *
+FROM students
+WHERE age > 21 AND department_id = 3;
+
+-- 学生年龄 > 21 或者 是女生的所有学生信息 （OR）
+SELECT *
+FROM students
+WHERE age > 21 OR gender = "女";
+-- 查询所有女生成绩（GPA）大于3.1或者男生的成绩小于3的所有信息
+SELECT *
+FROM students
+WHERE gender = "女" AND gpa > 3.1
+OR gender = "男" AND gpa < 3.0;
+
+--题目 4：查询来自 Computer Science 系部，且年龄不小于 21 岁的学生
+/*Step 1（找到相关的表）:  学生
+Step 2（找到相关的条件，分析条件之间的关系）: Department_name = Computer AND Science age > 21
+Step 3 （最终要查询的信息（列名），没有指定，返回所有信息 *）: *， column name*/
+SELECT *
+FROM students
+WHERE ?;
+
+
+SELECT age, name
+FROM students
+WHERE name LIKE '.a%';
+
+-- 不同的条件方法可以实现不同的查询结果，但是性能（performance）却不一样
+SELECT age, name, department_id
+FROM students
+WHERE department_id IN (3, 4, 5);
+
+
+SELECT age, name, department_id
+FROM students
+WHERE department_id = 3 OR department_id = 4 OR department_id = 5;
+
+SELECT age, name
+FROM students
+WHERE student_id = 1003 OR student_id = 1004;
+
+-- Create a table （创建一张表）
+
+INSERT INTO students (
+                         student_id,
+                         name,
+                         gender,
+                         age,
+                         department_id
+                     )
+                     VALUES (
+                         '1005',
+                         'Alice',
+                         'Female',
+                         '18',
+                         '2'
+                     );
+
+SELECT *
+  FROM students;
+
+SELECT *
+  FROM courses;
+
+SELECT *
+  FROM teachers;
+
+-- 1. 显示所有学生的 GPA 以及四舍五入后的 GPA（保留 1 位小数）。-- ROUND(gpa, 1)
+SELECT st.name,
+       st.gpa,
+       cr.department_id
+  FROM students AS st
+       JOIN
+       courses AS cr ON st.department_id = cr.department_id;-- 2. 显示每位教师的薪资差值（以 7000 为基准）与绝对值。
+-- ABS(salary - 9000)
+SELECT name,
+       salary,
+       9000 - 7000 AS diff
+  FROM teachers;-- 3. 显示所有课程的学分，向上取整和向下取整。
+-- CEIL(credit)-- FLOOR(credit)
+SELECT gpa,
+       CEIL(gpa) AS ceil_gpa,
+       FLOOR(gpa) AS floor_gpa
+  FROM students;-- 4. 查询所有课程的学分的平方与平方根。
+-- POWER(credit, 2)-- SQRT(credit)
+SELECT gpa,
+       POWER(gpa, 2) 
+  FROM students;
+
+SELECT salary,
+       SQRT(salary) 
+  FROM teachers;-- ORDER BY 排序
+-- LIMIT 限制 返回 1？条数据-- 5. 随机返回任意一个学生的信息。
+SELECT *
+  FROM students
+ ORDER BY RANDOM() 
+ LIMIT 3;-- 🔤 字符串函数类
+-- 6. 显示所有教师姓名及其长度。-- LENGTH(name)
+SELECT course_name,
+       LENGTH(course_name) 
+  FROM courses
+ WHERE LENGTH(course_name) > 4;-- 7. 显示所有系别名称的大写与小写形式。
+-- UPPER(department_name)-- LOWER(department_name)
+SELECT course_name,
+       UPPER(course_name) AS upper_name,
+       LOWER(course_name) AS lower_name
+  FROM courses;-- 8. 显示课程名称的前两个字。
+-- SUBSTR(course_name, 1, 2)
+SELECT course_name,
+LENGTH(course_name),
+       LENGTH(course_name) - 1,
+       SUBSTR(course_name, , 2) 
+  FROM courses;
+  
+
+-- 9. 显示去除学生姓名两侧空格后的结果。
+-- TRIM(name), LTRIM(name), RTRIM(name)
+SELECT name, TRIM(name), LTRIM(name), RTRIM(name)
+FROM students;
+
+-- 10. 显示课程名称，将 “编程” 替换为 “程序”。
+-- REPLACE(course_name, '编程', '程序')
+-- em[ty -> "R"
+SELECT name, REPLACE(name, ' ', 'R')
+FROM students;
+
+SELECT course_name, REPLACE(course_name, '编程', '程序')
+FROM courses;
+   
+-- 11. 显示课程名称中“学”字首次出现的位置。
+-- INSTR(course_name, '学')
+SELECT course_name,INSTR(course_name, '导')
+FROM courses;
+
+
+-- ORDERBY, LIMIT
+/*
+BETWEEN x AND y
+NOT BETWEEN x AND y
+IN (v1)
+NOT IN (v1, v2, v3)
+IS NULL
+IS NOT NULL
+NOT 条件
+ ROUND(x)
+ ABS(x) 
+ CEIL(3.142) = 4.0 / FLOOR(3.142) = 3.0
+ POWER(x, y) 
+ SQRT(x) 
+ RANDOM() 
+ LENGTH(s) 
+ UPPER(s) / LOWER(s) 
+ SUBSTR(s, start, len) -- index: 1 
+ TRIM("    ooooo   ") / LTRIM() / RTRIM() 
+ REPLACE(s, old, new) 
+ INSTR(s, substr) -- index, 0
+ */
+
+-- 查找年龄在 20 到 25 岁之间，且是女性的学生
+--Find students aged between 20 and 25, and who are female
+
+SELECT * 
+FROM students
+WHERE age BETWEEN 20 AND 25
+  AND gender = '女';
+
+
+-- 查找年龄大于 22 岁，或者性别是男性的学生
+-- Find students older than 22, or male students
+
+SELECT * 
+FROM students
+WHERE age > 22 
+   OR gender = '男';
+
+
+-- 查找名字以 ‘A’ 开头，或者（年龄小于 20 且性别为男性）的学生 
+-- Find students whose names start with ‘A’, or (age < 20 and gender = male)
+
+SELECT * 
+FROM students
+WHERE name LIKE 'A%' 
+   OR (age < 20 AND gender = '男');
+
+
+-- 查找没有部门，或年龄小于 21 岁的学生
+-- Find students with no department OR whose age is less than 21
+
+SELECT * 
+FROM students
+WHERE department_id IS NULL 
+   OR age < 21;
+
+
+-- 查找名字不为空，且（性别是女 或 年龄大于25） 的学生
+-- Find students whose name is not null, and (gender is female OR age > 25)
+
+SELECT * 
+FROM students
+WHERE name IS NOT NULL 
+  AND (gender = '女' OR age > 25);
+
+
+-- 找出名字以 ‘A’ 开头且长度为 2 的学生
+-- Find students whose names start with ‘A’ and have exactly 2 letters
+-- PRAGMA case_sensitive_like = OFF;
+-- GLOB *
+
+/* SUBSTR(s, start, len) -- index: 1 
+ TRIM("    ooooo   ") / LTRIM() / RTRIM() 
+ REPLACE(s, old, new) 
+ INSTR(s, substr) -- index, 0*/
+
+SELECT *
+FROM students
+WHERE = '1' AND LENGTH(name) = 2;
+
+
+-- 查找名字中包含 ‘li’ 的位置（字符串位置）
+-- Find the position of substring ‘li’ in each student’s name
+-- the name contains 'e' position > 2 
+SELECT name, INSTR(name, 'e')
+FROM students
+WHERE INSTR(name, 'e') > 2;
+
+
+/* LENGTH(s) 
+ UPPER(s) / LOWER(s) 
+ SUBSTR(s, start, len) -- index: 1 
+ TRIM("    ooooo   ") / LTRIM() / RTRIM() 
+ REPLACE(s, old, new) 
+ INSTR(s, substr) -- index, 0*/
+-- 将名字中的小写 ‘a’ 替换成大写 ‘A’
+-- Replace lowercase ‘a’ with uppercase ‘A’ in student names
+
+SELECT name, REPLACE(name, 'a', 'A')
+FROM students;
+
+
+-- 去除名字前后空格，并截取前3个字符
+-- Trim whitespace and get the first 3 characters of the name
+
+SELECT name, SUBSTR(TRIM(name), 1, 3)
+FROM students;
+
+-- 找出名字长度为偶数，且性别为女的学生
+-- Find students with even-length names and who are female
+
+SELECT * 
+FROM students
+WHERE LENGTH(name) % 2 = 0 AND gender = '女';
+
+-- 找出名字前三个字母是 ‘Ali’ 或 ‘Bob’ 的学生
+-- Find students whose names start with ‘Ali’ or ‘Bob’
+
+SELECT * 
+FROM students
+WHERE (name LIKE 'Ali%') OR (name LIKE 'Bob%');
+
+-- 查找年龄大于等于 21，且年龄的平方根大于 4 的学生
+-- Find students age ≥ 21 AND whose square root of age > 4
+
+SELECT * 
+FROM students
+WHERE age >= 21 AND SQRT(age) > 4;
+
+
+
+--------------------DateTime--------------------
+-- 查询所有学生信息  
+-- Query all student information  
+SELECT * FROM students;
+
+-- 查询所有课程信息  
+-- Query all course information  
+SELECT * FROM courses;
+
+-- 查询所有教师信息  
+-- Query all teacher information  
+SELECT * FROM teachers;
+
+-- birth_date, enrolled_date -- 当前日期  
+-- birth_date, enrolled_date -- DATE('now') means today’s date
+
+/*  
+日期/时间函数演示  
+Date/Time function usage examples  
+*/
+-- 当前日期/时间  
+-- Current date/time  
+SELECT DATE('now');  
+SELECT TIME('now'); 
+SELECT DATETIME('now');
+
+-- 提取时间组件  
+-- Extract components from date  
+SELECT STRFTIME('%Y', 'now');   -- 年 Year  
+SELECT STRFTIME('%m', 'now');   -- 月 Month  
+SELECT STRFTIME('%d', 'now');   -- 日 Day  
+SELECT STRFTIME('%H', 'now');   -- 小时 Hour  
+SELECT STRFTIME('%M', 'now');  -- 分钟 Minute  
+SELECT STRFTIME('%S', 'now');  -- 秒 Second  
+SELECT STRFTIME('%w', 'now');  -- 星期几 Weekday (0=Sunday)  
+SELECT STRFTIME('%j', 'now');  -- 一年中的第几天 Day of year  
+SELECT STRFTIME('%W', 'now');  -- 一年中的第几周 Week number
+
+-- 日期偏移操作  
+-- Date offset examples  
+SELECT DATE('now', '+1 day'); 
+SELECT DATE('now', '-7 day'); 
+SELECT DATETIME('now', '+3 hours', '-15 minutes');
+SELECT DATE('2025-01-01', '+1 month');
+SELECT DATE('2025-01-01', '+1 year', '-1 day');
+SELECT JULIANDAY('now');
+
+-- 查询所有学生的姓名和出生年份（从 birth_date 提取年）  
+-- Query all student names and extract birth year  
+SELECT name, ? 
+FROM students;
+
+-- 查询所有今天注册的学生  
+-- Query students enrolled today  
+SELECT name, enrolled_date  
+FROM students  
+WHERE ?;
+
+-- 查询最近 7 天内注册的学生  
+-- Students enrolled in the past 7 days  
+SELECT name, enrolled_date  
+FROM students  
+WHERE ?;
+
+-- 查询所有课程的持续天数  
+-- Duration of each course (days since created_at)  
+SELECT course_name, created_at, ?
+FROM courses;
+
+-- 查询出生在 2000 年后的学生  
+-- Students born after 2000  
+SELECT name, birth_date  
+FROM students  
+WHERE ?;
+
+-- 查询学生注册年月（格式 2025-07）  
+-- Show student enrollment month in 'YYYY-MM' format  
+SELECT name, ?
+FROM students;
+
+-- 查询注册时间是上午的学生  
+-- Students who registered in the morning (00:00–11:59)  
+-- CAST(xxxx AS INTEGER)
+SELECT name, ? 
+FROM students  
+WHERE ?;
+
+-- 查询在周末注册的学生  
+-- Students who registered on weekend (Saturday or Sunday)  
+-- 0=Sunday, 6=Saturday
+SELECT name, enrolled_date, ?  
+FROM students  
+WHERE ?;  
+
+-- 查询出生月份为 6 月的学生  
+-- Students born in June  
+SELECT name, birth_date  
+FROM students  
+WHERE ?;
+
+-- 查询注册距今天的天数  
+-- Days since enrollment  
+SELECT name, enrolled_date,  
+       ?  
+FROM students;
+
+-- 查询每门课程的结束时间延后 7 天后的日期  
+-- Course end date extended by 7 days  
+SELECT course_name, created_at, ? 
+FROM courses;
+
+-- 查询课程开始后 1 个月 14 天的日期  
+-- Course date after 1 month and 14 days  
+SELECT course_name, created_at,  
+       ?  
+FROM courses;
+
+-- 查询年龄升序排列的前 5 个学生  
+-- Top 5 youngest students  
+SELECT name, age  
+FROM students;
+
+-- 查询课程表中最近创建的记录  
+-- Most recently created courses  
+SELECT course_id, DATETIME(created_at) AS created_at  
+FROM courses;
+
+SELECT *
+  FROM students;
+
+SELECT *
+  FROM courses;
+
+SELECT *
+  FROM teachers;
+
+-- birth_date, enrolled_date-- DATE('now')
+
+/*DATE('now')
+TIME('now')
+DATETIME('now')
+STRFTIME('%Y', 'now')
+STRFTIME('%m', 'now')
+STRFTIME('%d', 'now')
+STRFTIME('%H', 'now')
+STRFTIME('%M', 'now')
+STRFTIME('%S', 'now')
+STRFTIME('%w', 'now')
+STRFTIME('%j', 'now')
+STRFTIME('%W', 'now')*/
+
+/*DATE('now', '+1 day')
+DATE('now', '-7 day')
+DATETIME('now', '+3 hours', '-15 minutes')
+DATE('2025-01-01', '+1 month')
+DATE('2025-01-01', '+1 year', '-1 day')*/
+
+SELECT DATETIME('now') 
+  FROM students;-- STRFTIME('%Y', 'now')
+
+SELECT STRFTIME('%Y', 'now') 
+  FROM students;-- STRFTIME('%m', 'now')
+
+SELECT STRFTIME('%m', 'now') 
+  FROM students;-- STRFTIME('%d', 'now')
+
+SELECT STRFTIME('%d', 'now') 
+  FROM students;-- JULIANDAY('now')
+
+SELECT JULIANDAY('now') 
+  FROM students;
+
+-- 查询所有学生的姓名和出生年份（从 birth_date 提取年）
+-- STRFTIME('%Y', birth_date)
+SELECT name
+FROM students;
+
+-- 查询所有今天注册的学生（enrolled_at 是今天（DATE('now')））
+SELECT name, enrolled_at
+FROM students
+WHERE DATE(enrolled_date);
+
+--  查询最近 7 天内注册的学生
+-- DATE('now', '-7 days')
+SELECT name, enrolled_date
+FROM students
+WHERE DATE(enrolled_date);
+
+-- 查询所有课程持续天数（now - created_at）
+-- JULIANDAY(date)
+SELECT course_name, JULIANDAY('now') - JULIANDAY(created_at)
+FROM courses;
+
+-- 查询出生在 2000 年后的学生
+-- DATE('2000-01-01')
+SELECT name, birth_date
+FROM students
+WHERE birth_date;
+
+-- 查询学生的注册月份（格式：2025-07）
+-- STRFTIME('%Y-%m', enrolled_date)
+SELECT name
+FROM students;
+
+-- 查询注册时间是早上（上午 12 点到 11 点）的学生
+-- STRFTIME('%H', enrolled_at)
+SELECT name, STRFTIME('%H', enrolled_date) AS hour
+FROM students
+WHERE CAST(STRFTIME('%H', enrolled_date) AS INTEGER) BETWEEN 0 AND 11;
+
+-- 查询在周末（周六或周日）注册的学生
+SELECT name, enrolled_date, STRFTIME('%w', enrolled_date) AS weekday
+FROM students
+WHERE STRFTIME('%w', enrolled_date) IN ('0', '6');  -- 0 = Sunday, 6 = Saturday
+
+-- 查询出生日期在每年 6 月份的学生
+SELECT name, birth_date
+FROM students
+WHERE STRFTIME('%m', birth_date) = '06';
+
+--  查询所有学生注册距今天的天数
+SELECT name, enrolled_date, 
+       CAST(JULIANDAY('now') - JULIANDAY(enrolled_date) AS INTEGER) AS days_since_enroll
+FROM students;
+
+
+-- 查询每门课程的结束时间延后 7 天后的日期
+SELECT course_name, created_at, DATE(created_at, '+7 days') AS extended_end
+FROM courses;
+
+-- 查询课程起始后 1 个月、2 周的上课日期
+SELECT course_name, created_at,
+       DATE(created_at, '+1 month', '+14 days') AS next_class_date
+FROM courses;
+
+-- ORDERBY, LIMIT
+-- 查询所有学生信息，并按年龄升序排列，只显示前 5 位：
+
+SELECT name, age
+FROM students
+ORDER BY age ASC
+LIMIT 5;
+
+ -- 查询课程表中最近创建的记录 
+SELECT course_id, DATETIME(created_at) AS created_at 
+FROM courses
+ORDER BY created_at DESC 
+LIMIT 5;
+
+
+-- Practice for test
+-- 查询年龄在 18 到 22 岁之间的学生姓名和年龄
+
+SELECT 
+FROM students 
+WHERE ;
+
+-- 查询不在 18 到 22 岁之间的学生姓名和年龄
+
+SELECT name, age
+FROM students 
+WHERE ;
+
+
+-- 1. 查询所有年龄大于 18 且小于等于 25 岁的学生姓名和年龄，并将姓名转换为大写显示：
+
+SELECT 
+FROM students
+WHERE ;
+
+-- 2. 查询年龄不是 20 或 22 岁，且性别为 ‘女’ 的学生姓名和年龄：
+
+SELECT
+FROM students
+WHERE ;
+
+-- 3. 查询学生表中所有姓名不为 NULL，且姓名长度大于 3 的学生：
+
+SELECT 
+FROM students
+WHERE ;
+
+-- 4. 查询所有课程分数为负数或大于 100 的记录，并显示其绝对值（用于识别异常分数）：
+
+SELECT 
+FROM enrollments
+WHERE ;
+
+-- 5. 查询所有学生的姓名，并将其首字母大写（仅 SQLite 支持 substr()）：
+
+SELECT 
+FROM students
+WHERE ;
+
+-- 6. 查询年龄为偶数的学生，并显示其年龄的平方值：
+
+SELECT
+FROM students
+WHERE ;
+
+-- 7. 查询所有学生的姓名和当前日期：
+
+SELECT 
+FROM ;
+
+-- 8. 查询学生表中所有男生且年龄在 20 ~ 30 岁之间，姓名长度在 3 到 5 之间的学生：
+
+SELECT 
+FROM students
+WHERE ;
+
+-- 9. 查询所有学生的年龄与 2025 年的差值（假设出生年份为 2025 - age）：
+
+SELECT 
+FROM students;
+
+-- 10. 查询成绩小于 60 且不为 NULL 的学生成绩，并保留 1 位小数：
+
+SELECT 
+FROM enrollments
+WHERE ;
+
+-- 11. 查询所有女生（gender = ‘F’），其姓名不包含空格，且姓名长度小于等于 6：
+
+SELECT n
+FROM students
+WHERE ;
+
+-- 12. 查询所有年龄为奇数的学生，并显示年龄的平方根（保留 2 位小数）：
+
+SELECT 
+FROM students
+WHERE ;
+
+-- 13. 查询所有姓氏是“Wang”的学生（假设姓氏为姓名前4个字母），并将姓氏替换为“小王”：
+
+SELECT 
+FROM students
+WHERE ;
+
+-- 14. 查询所有选课记录中，分数字段为空或为负值的记录（用于排查问题数据）：
+
+SELECT 
+FROM enrollments
+WHERE ;
+
+-- 15. 查询学生信息中年龄不是 18、19、20，并且姓名不是 NULL 的学生姓名和年龄：
+
+SELECT 
+FROM students
+WHERE ;
+
+-- 16. 查询课程编号在 100 到 199 之间，且不属于 department_id 为 3 或 5 的课程：
+
+SELECT course_id, department_id
+FROM courses
+WHERE ;
+
+-- 17. 查询所有学生的姓名，并移除首尾空格（使用 TRIM）后再转换为大写：
+
+SELECT 
+FROM students;
+
+-- 18. 查询所有教师的 ID，并使用 POWER 函数显示其 ID 的立方值（例如 id³）：
+
+SELECT 
+FROM teachers;
+
+-- 19. 查询所有学生年龄，显示其上取整与下取整的结果（CEIL / FLOOR）：
+
+SELECT age
+FROM students;
+
+-- 20. 查询所有学生姓名，并显示名字中是否包含子字符串 “lee”（返回位置）：
+
+SELECT name
+FROM students;
+
+-- 21. 查询所有课程信息，并用 RANDOM() 生成一个模拟评分字段(mock_score)：
+
+SELECT course_id, teacher_id
+FROM courses;
+
+-- 22. 查询所有学生的姓名和注册当天的日期、时间（DATETIME）：
+
+SELECT name
+FROM students;
+
+-- 23. 查询所有学生的姓名、出生年份（假设今年是 2025），并使用 STRFTIME 提取当前月份：
+
+SELECT name
+FROM students;
+
+
+-- 24. 查询所有学生中年龄在 22 到 25 且不等于 23 岁的学生，按姓名长度倒序排列：
+
+SELECT *
+FROM students;
+
+-- 统计每个系的学生人数	
+	SELECT department_id, COUNT(student_id) AS student_count
+	FROM students
+	GROUP BY department_id;
+	
+	
+-- 统计每个性别的人数	
+	SELECT gender, COUNT(*) AS count
+	FROM students
+	GROUP BY gender;
+	
+	
+-- 统计各课程的平均分数	
+	SELECT course_id, AVG(score) AS avg_score
+	FROM enrollments
+	GROUP BY course_id;
+	
+	
+-- 统计每门课的最低和最高成绩	
+	SELECT course_id, MIN(score) AS min_score, MAX(score) AS max_score
+	FROM enrollments
+	GROUP BY course_id;
+	
+	
+-- 统计每个老师教授的课程数量	
+	SELECT teacher_id, COUNT(*) AS course_count
+	FROM courses
+	GROUP BY teacher_id;
+	
+	
+-- 统计每个系年龄大于20岁的学生人数	
+	SELECT department_id, COUNT(*) AS count
+	FROM students
+	WHERE age > 20
+	GROUP BY department_id;
+	
+	
+-- 统计每个学生是否有成绩（非 NULL）的课程数量	
+	SELECT student_id, COUNT(score) AS scored_course_count
+	FROM enrollments
+	GROUP BY student_id;
+	
+	
+-- 统计各课程分数大于等于80的学生人数	
+	SELECT course_id, COUNT(*) AS high_score_count
+	FROM enrollments
+	WHERE score >= 80
+	GROUP BY course_id;
+	
+	
+-- 统计每个课程是否有 NULL 成绩记录	
+	SELECT course_id, SUM(CASE WHEN score IS NULL THEN 1 ELSE 0 END) AS null_score_count
+	FROM enrollments
+	GROUP BY course_id;
+	
+-- 统计每个系中学生姓名长度超过4的数量	
+	SELECT department_id, COUNT(*) AS count
+	FROM students
+	WHERE LENGTH(name) > 4
+	GROUP BY department_id;
+	
+-- 找出每个系平均年龄大于21的系	
+	SELECT department_id, AVG(age) AS avg_age
+	FROM students
+	WHERE age IS NOT NULL
+	GROUP BY department_id
+	HAVING AVG(age) > 21;
+	
+	
+-- 找出有超过 1 个学生参加且平均分大于85的课程	
+	SELECT course_id, COUNT(*) AS count, AVG(score) AS avg_score
+	FROM enrollments
+	WHERE score IS NOT NULL
+	GROUP BY course_id
+	HAVING COUNT(*) > 1 AND AVG(score) > 85;
+	
+	
+-- 统计每个性别下，姓名不为 NULL 的学生平均年龄，排除年龄为 NULL	
+	SELECT gender, AVG(age) AS avg_age
+	FROM students
+	WHERE name IS NOT NULL AND age IS NOT NULL
+	GROUP BY gender;
+	
+	
+-- 统计每个学生的总分，但只保留总分在 150 到 200 之间的记录	
+	SELECT student_id, SUM(score) AS total_score
+	FROM enrollments
+	WHERE score IS NOT NULL
+	GROUP BY student_id
+	HAVING SUM(score) BETWEEN 150 AND 200;
+	
+	
+-- 按课程分组，计算平均分、人数，要求平均分非空且不少于2人	
+	SELECT course_id, AVG(score) AS avg_score, COUNT(*) AS student_count
+	FROM enrollments
+	WHERE score IS NOT NULL
+	GROUP BY course_id
+	HAVING COUNT(*) >= 2;
+	
+	
+-- 找出平均年龄最小的性别组（先分组，再排序取TOP 1）	
+	SELECT gender, AVG(age) AS avg_age
+	FROM students
+	WHERE age IS NOT NULL
+	GROUP BY gender
+	ORDER BY avg_age ASC
+	LIMIT 1;
+	
+	
+-- 找出所有分数为整数的课程及其平均分	
+	SELECT course_id, AVG(score) AS avg_score
+	FROM enrollments
+	WHERE score IS NOT NULL AND score = FLOOR(score)
+	GROUP BY course_id;
+	
+	
+-- 统计每个学生的总分并计算其分数平方和（练 POWER）	
+	SELECT student_id, SUM(score) AS total_score, SUM(POWER(score, 2)) AS sum_square
+	FROM enrollments
+	WHERE score IS NOT NULL
+	GROUP BY student_id;
+	
+	
+-- 找出名字包含字母 “a” 的学生，按系分组统计人数	
+	SELECT department_id, COUNT(*) AS count
+	FROM students
+	WHERE name IS NOT NULL AND name LIKE '%a%'
+	GROUP BY department_id;
+	
+	
+-- 找出所有课程中，成绩波动超过20（max - min > 20）的课程	
+	SELECT course_id, MAX(score) - MIN(score) AS score_range
+	FROM enrollments
+	WHERE score IS NOT NULL
+	GROUP BY course_id
+	HAVING MAX(score) - MIN(score) > 20;
+	
+	
+-- Inner Join 学生和选课信息	
+	
+/*EN: List all students and the courses they enrolled in	
+CN: 列出所有学生及其所选的课程名称	
+	*/
+	
+	SELECT s.name AS student_name, c.course_name
+	FROM students s
+	INNER JOIN enrollments e ON s.student_id = e.student_id
+	INNER JOIN courses c ON e.course_id = c.course_id;
+	
+	
+	
+	
+--Join with Department 学生及其所属系	
+	
+	
+/*EN: Show student names and their department names	
+CN: 显示学生姓名及其所属系名称	
+	*/
+	
+	SELECT s.name AS student_name, d.department_name
+	FROM students s
+	JOIN departments d ON s.department_id = d.department_id;
+	
+	
+	
+-- Join Course & Teacher 课程与授课教师	
+	
+	
+/*EN: Show each course and the teacher who teaches it	
+CN: 显示每门课程及其授课教师	*/
+	
+	
+	SELECT c.course_name, t.name AS teacher_name
+	FROM courses c
+	JOIN teachers t ON c.teacher_id = t.teacher_id;
+	
+	
+	
+-- 综合多表 JOIN：学生、课程、成绩	
+	
+	
+/*EN: List student name, course name, and score	
+CN: 列出学生姓名、课程名称与成绩	*/
+	
+	
+	SELECT s.name AS student_name, c.course_name, e.score
+	FROM students s
+	JOIN enrollments e ON s.student_id = e.student_id
+	JOIN courses c ON e.course_id = c.course_id;
+	
+	
+	
+-- JOIN with 条件过滤	
+	
+	
+/*EN: Find all students who scored below 70	
+CN: 查找成绩低于 70 分的学生	*/
+	
+	
+	SELECT s.name AS student_name, c.course_name, e.score
+	FROM students s
+	JOIN enrollments e ON s.student_id = e.student_id
+	JOIN courses c ON e.course_id = c.course_id
+	WHERE e.score < 70;
+	
+	
+	
+-- LEFT JOIN：显示所有课程及是否被选	
+	
+	
+/*EN: Show all courses and the students who enrolled (if any)	
+CN: 显示所有课程及其是否有学生选修	*/
+	
+	
+	SELECT c.course_name, s.name AS student_name
+	FROM courses c
+	LEFT JOIN enrollments e ON c.course_id = e.course_id
+	LEFT JOIN students s ON e.student_id = s.student_id;
+	
+	
+-- FULL OUTER JOIN（SQLite不支持，理论练习）	
+	
+	
+/*EN: Show all students and all courses, even if there’s no enrollment	
+CN: 显示所有学生与所有课程，即使没有选课记录	
+	*/
+	
+--（注意：SQLite 不支持 FULL OUTER JOIN，可以用 UNION 代替）	
+	
+	
+	
+	

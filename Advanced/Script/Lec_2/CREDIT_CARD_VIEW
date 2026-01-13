@@ -1,0 +1,113 @@
+-- 1. 创建一个VIEW，显示每笔交易及对应客户姓名
+-- 1. Create a VIEW showing each transaction along with customer first and last name
+CREATE VIEW view_transaction_customer AS
+SELECT t.trans_num, t.amt, c.first, c.last
+FROM transactions t
+JOIN customers c ON t.cc_num = c.cc_num;
+
+-- 查询VIEW示例
+SELECT * FROM view_transaction_customer LIMIT 5;
+
+-- 2. 创建一个VIEW，显示每个商家总交易额
+-- 2. Create a VIEW showing total transaction amount per merchant
+CREATE VIEW view_merchant_total AS
+SELECT m.merchant_name, SUM(t.amt) AS total_amount
+FROM transactions t
+JOIN merchants m ON t.merchant_id = m.merchant_id
+GROUP BY m.merchant_name;
+
+-- 查询VIEW示例
+SELECT * FROM view_merchant_total ORDER BY total_amount DESC LIMIT 5;
+
+-- 3. 创建一个VIEW，显示每个州的客户数量
+-- 3. Create a VIEW showing number of customers per state
+CREATE VIEW view_state_customers AS
+SELECT s.state_name, COUNT(c.cc_num) AS customer_count
+FROM customers c
+JOIN states s ON c.state = s.state_code
+GROUP BY s.state_name;
+
+-- 查询VIEW示例
+SELECT * FROM view_state_customers;
+
+-- 4. 删除VIEW
+-- 4. Drop a VIEW
+DROP VIEW IF EXISTS view_transaction_customer;
+
+-- 5. 创建一个VIEW，显示欺诈交易明细及商家分类
+-- 5. Create a VIEW showing fraudulent transactions with merchant category
+CREATE VIEW view_fraud_category AS
+SELECT t.trans_num, t.amt, m.category, m.merchant_name
+FROM transactions t
+JOIN merchants m ON t.merchant_id = m.merchant_id
+WHERE t.is_fraud = 1;
+
+-- 查询VIEW示例
+SELECT * FROM view_fraud_category LIMIT 5;
+
+-- 6. 创建一个VIEW，显示每个客户的平均交易金额
+-- 6. Create a VIEW showing each customer's average transaction amount
+CREATE VIEW view_customer_avg AS
+SELECT c.cc_num, c.first, c.last, AVG(t.amt) AS avg_amount
+FROM customers c
+JOIN transactions t ON c.cc_num = t.cc_num
+GROUP BY c.cc_num;
+
+-- 查询VIEW示例
+SELECT * FROM view_customer_avg ORDER BY avg_amount DESC LIMIT 5;
+
+-- 7. 创建一个VIEW，显示每个城市的总交易额
+-- 7. Create a VIEW showing total transaction amount per city
+CREATE VIEW view_city_total AS
+SELECT c.city, SUM(t.amt) AS total_amount
+FROM transactions t
+JOIN customers c ON t.cc_num = c.cc_num
+GROUP BY c.city;
+
+-- 查询VIEW示例
+SELECT * FROM view_city_total ORDER BY total_amount DESC LIMIT 5;
+
+
+-- 8. 使用子查询创建VIEW，显示交易金额大于客户平均金额的交易
+-- 8. Create a VIEW showing transactions with amount greater than customer's average
+CREATE VIEW view_above_avg AS
+SELECT *
+FROM transactions t1
+WHERE t1.amt > (
+    SELECT AVG(t2.amt)
+    FROM transactions t2
+    WHERE t2.cc_num = t1.cc_num
+);
+
+-- 查询VIEW示例
+SELECT * FROM view_above_avg LIMIT 5;
+
+-- 9. 使用JOIN和子查询，显示每个客户的最大交易及对应商家
+-- 9. Use JOIN and subquery to show each customer's highest transaction and merchant
+CREATE VIEW view_max_txn_merchant AS
+SELECT t.trans_num, t.cc_num, t.amt, m.merchant_name
+FROM transactions t
+JOIN merchants m ON t.merchant_id = m.merchant_id
+WHERE t.amt = (
+    SELECT MAX(amt)
+    FROM transactions
+    WHERE cc_num = t.cc_num
+);
+
+-- 查询VIEW示例
+SELECT * FROM view_max_txn_merchant LIMIT 5;
+
+
+-- 10. 删除所有创建过的VIEW
+-- 10. Drop all previously created VIEWs
+DROP VIEW IF EXISTS view_merchant_total;
+DROP VIEW IF EXISTS view_state_customers;
+DROP VIEW IF EXISTS view_fraud_category;
+DROP VIEW IF EXISTS view_customer_avg;
+DROP VIEW IF EXISTS view_city_total;
+DROP VIEW IF EXISTS view_above_avg;
+DROP VIEW IF EXISTS view_max_txn_merchant;
+
+
+⸻
+

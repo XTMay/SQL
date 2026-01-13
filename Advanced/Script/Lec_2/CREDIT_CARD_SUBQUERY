@@ -1,0 +1,182 @@
+-- 1. 查询每个商家的总交易额
+-- 1. Show total transaction amount per merchant
+SELECT m.merchant_name, SUM(t.amt) AS total_amount
+FROM transactions t
+JOIN merchants m ON t.merchant_id = m.merchant_id
+GROUP BY m.merchant_name;
+
+-- 2. 查询每个客户的交易次数
+-- 2. Show number of transactions per customer
+SELECT c.first, c.last, COUNT(t.trans_num) AS txn_count
+FROM customers c
+JOIN transactions t ON c.cc_num = t.cc_num
+GROUP BY c.cc_num;
+
+-- 3. 查询每个州的客户数量
+-- 3. Show number of customers per state
+SELECT s.state_name, COUNT(c.cc_num) AS customer_count
+FROM customers c
+JOIN states s ON c.state = s.state_code
+GROUP BY s.state_name;
+
+-- 4. 查询每个城市的总交易金额
+-- 4. Show total transaction amount per city
+SELECT c.city, SUM(t.amt) AS total_amount
+FROM customers c
+JOIN transactions t ON c.cc_num = t.cc_num
+GROUP BY c.city
+ORDER BY total_amount DESC;
+
+-- 5. 查询欺诈交易占比超过10%的商家
+-- 5. Show merchants with more than 10% fraudulent transactions
+SELECT m.merchant_name,
+       COUNT(CASE WHEN t.is_fraud=1 THEN 1 END) * 1.0 / COUNT(*) AS fraud_ratio
+FROM transactions t
+JOIN merchants m ON t.merchant_id = m.merchant_id
+GROUP BY m.merchant_name
+HAVING fraud_ratio > 0.1;
+
+-- 6. 查询每个商家平均交易金额和交易次数
+-- 6. Show average transaction amount and count per merchant
+SELECT m.merchant_name, AVG(t.amt) AS avg_amount, COUNT(t.trans_num) AS txn_count
+FROM transactions t
+JOIN merchants m ON t.merchant_id = m.merchant_id
+GROUP BY m.merchant_name;
+
+-- 7. 查询每个客户的最大交易金额及交易商家
+-- 7. Show each customer's maximum transaction amount and merchant
+SELECT c.first, c.last, t.amt, m.merchant_name
+FROM transactions t
+JOIN customers c ON t.cc_num = c.cc_num
+JOIN merchants m ON t.merchant_id = m.merchant_id
+WHERE t.amt = (SELECT MAX(amt) FROM transactions WHERE cc_num = t.cc_num);
+
+-- 8. 查询每个类别下的总交易额
+-- 8. Show total transaction amount per category
+SELECT m.category, SUM(t.amt) AS total_amount
+FROM transactions t
+JOIN merchants m ON t.merchant_id = m.merchant_id
+GROUP BY m.category;
+
+-- 9. 查询每个客户在每个商家类别的消费总额
+-- 9. Show total amount each customer spent per merchant category
+SELECT c.first, c.last, m.category, SUM(t.amt) AS total_amount
+FROM transactions t
+JOIN customers c ON t.cc_num = c.cc_num
+JOIN merchants m ON t.merchant_id = m.merchant_id
+GROUP BY c.cc_num, m.category
+ORDER BY total_amount DESC;
+
+-- 10. 查询每个州的平均交易金额
+-- 10. Show average transaction amount per state
+SELECT s.state_name, AVG(t.amt) AS avg_amount
+FROM transactions t
+JOIN customers c ON t.cc_num = c.cc_num
+JOIN states s ON c.state = s.state_code
+GROUP BY s.state_name;
+
+-- 11. 查询交易金额大于客户平均金额的交易记录
+-- 11. Show transactions where amount is greater than customer's average
+SELECT t.trans_num, c.first, c.last, t.amt
+FROM transactions t
+JOIN customers c ON t.cc_num = c.cc_num
+WHERE t.amt > (
+    SELECT AVG(amt)
+    FROM transactions
+    WHERE cc_num = t.cc_num
+);
+
+-- 12. 查询每个商家类别的欺诈交易数量
+-- 12. Show number of fraudulent transactions per merchant category
+SELECT m.category, COUNT(*) AS fraud_count
+FROM transactions t
+JOIN merchants m ON t.merchant_id = m.merchant_id
+WHERE t.is_fraud = 1
+GROUP BY m.category;
+
+-- 13. 查询每个客户每年交易总额
+-- 13. Show total transaction amount per customer per year
+SELECT c.first, c.last, strftime('%Y', t.trans_date) AS year, SUM(t.amt) AS total_amount
+FROM transactions t
+JOIN customers c ON t.cc_num = c.cc_num
+GROUP BY c.cc_num, year
+ORDER BY year;
+
+-- 14. 查询交易金额排名前5的客户及交易总额
+-- 14. Show top 5 customers by total transaction amount
+SELECT c.first, c.last, SUM(t.amt) AS total_amount
+FROM transactions t
+JOIN customers c ON t.cc_num = c.cc_num
+GROUP BY c.cc_num
+ORDER BY total_amount DESC
+LIMIT 5;
+
+-- 15. 查询每个州交易金额超过平均值的客户数量
+-- 15. Show number of customers per state whose total transactions exceed state average
+SELECT s.state_name, COUNT(*) AS customer_count
+FROM (
+    SELECT c.cc_num, c.state, SUM(t.amt) AS total_amount
+    FROM transactions t
+    JOIN customers c ON t.cc_num = c.cc_num
+    GROUP BY c.cc_num
+) AS cust_total
+JOIN states s ON cust_total.state = s.state_code
+WHERE cust_total.total_amount > (
+    SELECT AVG(t2.amt)
+    FROM transactions t2
+    JOIN customers c2 ON t2.cc_num = c2.cc_num
+    WHERE c2.state = cust_total.state
+)
+GROUP BY s.state_name;
+
+-- 16. 查询每个客户的最早和最晚交易日期
+-- 16. Show earliest and latest transaction date per customer
+SELECT c.first, c.last, MIN(t.trans_date) AS first_txn, MAX(t.trans_date) AS last_txn
+FROM transactions t
+JOIN customers c ON t.cc_num = c.cc_num
+GROUP BY c.cc_num;
+
+-- 17. 查询每个商家类别交易金额最高的交易
+-- 17. Show highest transaction per merchant category
+SELECT m.category, t.trans_num, t.amt, m.merchant_name
+FROM transactions t
+JOIN merchants m ON t.merchant_id = m.merchant_id
+WHERE t.amt = (
+    SELECT MAX(t2.amt)
+    FROM transactions t2
+    JOIN merchants m2 ON t2.merchant_id = m2.merchant_id
+    WHERE m2.category = m.category
+);
+
+-- 18. 查询交易金额高于所属城市平均交易的交易
+-- 18. Show transactions above city average transaction amount
+SELECT t.trans_num, c.city, t.amt
+FROM transactions t
+JOIN customers c ON t.cc_num = c.cc_num
+WHERE t.amt > (
+    SELECT AVG(t2.amt)
+    FROM transactions t2
+    JOIN customers c2 ON t2.cc_num = c2.cc_num
+    WHERE c2.city = c.city
+);
+
+-- 19. 查询每个客户的交易总额占总交易额百分比
+-- 19. Show percentage of total transaction amount per customer
+SELECT c.first, c.last, SUM(t.amt) * 100.0 / (SELECT SUM(amt) FROM transactions) AS pct_total
+FROM transactions t
+JOIN customers c ON t.cc_num = c.cc_num
+GROUP BY c.cc_num
+ORDER BY pct_total DESC;
+
+-- 20. 查询每个客户最常消费的商家类别
+-- 20. Show most frequent merchant category per customer
+SELECT first, last, category
+FROM (
+    SELECT c.first, c.last, m.category, COUNT(*) AS cnt,
+           ROW_NUMBER() OVER(PARTITION BY c.cc_num ORDER BY COUNT(*) DESC) AS rn
+    FROM transactions t
+    JOIN customers c ON t.cc_num = c.cc_num
+    JOIN merchants m ON t.merchant_id = m.merchant_id
+    GROUP BY c.cc_num, m.category
+) sub
+WHERE rn = 1;
